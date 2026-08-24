@@ -1,32 +1,48 @@
-# Virtual Environment
-venv/
-.venv/
-env/
-ENV/
-
-# Python Cache & Bytecode
-__pycache__/
-*.py[cod]
-*$py.class
-
-# Environment Variables (שומר על הסיסמאות וההגדרות שלך מחוץ לגיט)
+## --- Environment & Sensitive Files ---
+# Never commit environment configuration files containing sensitive data
 .env
 .env.*
 !.env.example
 
-# VS Code & IDE settings
+## --- Build & Binaries ---
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+artifacts/
+
+## --- Visual Studio & IDEs ---
+.vs/
+.idea/
 .vscode/*
 !.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
-# Local files & Uploads (קבצים שה-API שלך מייצר/שומר)
-storage/
-uploads/
-*.klv
-*.bin
+## --- User-specific files ---
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.rsuser
+*.sln.docstates
+
+## --- Temporary & Cache Files ---
+*.tmp
 *.log
+*.tlog
+*.cache
+*.vsidx
+*.suo
 
-# OS files
-.DS_Store
-Thumbs.db
-
-.vscode
+## --- NuGet ---
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
