@@ -55,7 +55,11 @@
           "dependencies": {
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
-              "version": "[10.0.11, )"
+              "version": "[11.0.0-preview.7.26381.103, )"
+            },
+            "Microsoft.OpenApi": {
+              "target": "Package",
+              "version": "[3.10.2, )"
             }
           },
           "imports": [

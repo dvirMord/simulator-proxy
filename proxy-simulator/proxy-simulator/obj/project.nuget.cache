@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "M1nsvXoHBCs=",
+  "dgSpecHash": "LYu7aPXlkuo=",
   "success": true,
   "projectFilePath": "C:\\Users\\dvirm\\Documents\\RAVEN-Project\\Raven\\simulator-proxy\\proxy-simulator\\proxy-simulator\\proxy-simulator.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\dvirm\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.11\\microsoft.aspnetcore.openapi.10.0.11.nupkg.sha512",
-    "C:\\Users\\dvirm\\.nuget\\packages\\microsoft.openapi\\2.7.5\\microsoft.openapi.2.7.5.nupkg.sha512"
+    "C:\\Users\\dvirm\\.nuget\\packages\\microsoft.aspnetcore.openapi\\11.0.0-preview.7.26381.103\\microsoft.aspnetcore.openapi.11.0.0-preview.7.26381.103.nupkg.sha512",
+    "C:\\Users\\dvirm\\.nuget\\packages\\microsoft.openapi\\3.10.2\\microsoft.openapi.3.10.2.nupkg.sha512"
   ],
   "logs": []
 }

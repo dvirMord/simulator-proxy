@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("proxy-simulator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+613bcd77480b04c8849a56e6986f8181badba6ae")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb79d6349a69fd9b48da973a563d6c04847e5b16")]
 [assembly: System.Reflection.AssemblyProductAttribute("proxy-simulator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("proxy-simulator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

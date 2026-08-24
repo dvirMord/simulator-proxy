@@ -1,12 +1,88 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\dvirm\\Documents\\RAVEN-Project\\Raven\\simulator-proxy\\proxy-simulator\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{86742BD2-D498-C7F0-5D61-6162A0327E21}|proxy-simulator\\proxy-simulator.csproj|c:\\users\\dvirm\\documents\\raven-project\\raven\\simulator-proxy\\proxy-simulator\\proxy-simulator\\controllers\\proxycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{86742BD2-D498-C7F0-5D61-6162A0327E21}|proxy-simulator\\proxy-simulator.csproj|solutionrelative:proxy-simulator\\controllers\\proxycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{86742BD2-D498-C7F0-5D61-6162A0327E21}|proxy-simulator\\proxy-simulator.csproj|c:\\users\\dvirm\\documents\\raven-project\\raven\\simulator-proxy\\proxy-simulator\\proxy-simulator\\dtos\\devicesdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{86742BD2-D498-C7F0-5D61-6162A0327E21}|proxy-simulator\\proxy-simulator.csproj|solutionrelative:proxy-simulator\\dtos\\devicesdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{86742BD2-D498-C7F0-5D61-6162A0327E21}|proxy-simulator\\proxy-simulator.csproj|c:\\users\\dvirm\\documents\\raven-project\\raven\\simulator-proxy\\proxy-simulator\\proxy-simulator\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{86742BD2-D498-C7F0-5D61-6162A0327E21}|proxy-simulator\\proxy-simulator.csproj|solutionrelative:proxy-simulator\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{86742BD2-D498-C7F0-5D61-6162A0327E21}|proxy-simulator\\proxy-simulator.csproj|c:\\users\\dvirm\\documents\\raven-project\\raven\\simulator-proxy\\proxy-simulator\\proxy-simulator\\servics\\proxyservices\\iproxyservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{86742BD2-D498-C7F0-5D61-6162A0327E21}|proxy-simulator\\proxy-simulator.csproj|solutionrelative:proxy-simulator\\servics\\proxyservices\\iproxyservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\dvirm\\Documents\\RAVEN-Project\\Raven\\simulator-proxy\\proxy-simulator\\proxy-simulator\\Program.cs",
+              "RelativeDocumentMoniker": "proxy-simulator\\Program.cs",
+              "ToolTip": "C:\\Users\\dvirm\\Documents\\RAVEN-Project\\Raven\\simulator-proxy\\proxy-simulator\\proxy-simulator\\Program.cs",
+              "RelativeToolTip": "proxy-simulator\\Program.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAAAAcAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-24T07:45:15.413Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DevicesDTOs.cs",
+              "DocumentMoniker": "C:\\Users\\dvirm\\Documents\\RAVEN-Project\\Raven\\simulator-proxy\\proxy-simulator\\proxy-simulator\\DTOs\\DevicesDTOs.cs",
+              "RelativeDocumentMoniker": "proxy-simulator\\DTOs\\DevicesDTOs.cs",
+              "ToolTip": "C:\\Users\\dvirm\\Documents\\RAVEN-Project\\Raven\\simulator-proxy\\proxy-simulator\\proxy-simulator\\DTOs\\DevicesDTOs.cs",
+              "RelativeToolTip": "proxy-simulator\\DTOs\\DevicesDTOs.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAMwAwAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-24T08:11:29.797Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IProxyService.cs",
+              "DocumentMoniker": "C:\\Users\\dvirm\\Documents\\RAVEN-Project\\Raven\\simulator-proxy\\proxy-simulator\\proxy-simulator\\Servics\\ProxyServices\\IProxyService.cs",
+              "RelativeDocumentMoniker": "proxy-simulator\\Servics\\ProxyServices\\IProxyService.cs",
+              "ToolTip": "C:\\Users\\dvirm\\Documents\\RAVEN-Project\\Raven\\simulator-proxy\\proxy-simulator\\proxy-simulator\\Servics\\ProxyServices\\IProxyService.cs",
+              "RelativeToolTip": "proxy-simulator\\Servics\\ProxyServices\\IProxyService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-24T08:02:27.18Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ProxyController.cs",
+              "DocumentMoniker": "C:\\Users\\dvirm\\Documents\\RAVEN-Project\\Raven\\simulator-proxy\\proxy-simulator\\proxy-simulator\\Controllers\\ProxyController.cs",
+              "RelativeDocumentMoniker": "proxy-simulator\\Controllers\\ProxyController.cs",
+              "ToolTip": "C:\\Users\\dvirm\\Documents\\RAVEN-Project\\Raven\\simulator-proxy\\proxy-simulator\\proxy-simulator\\Controllers\\ProxyController.cs",
+              "RelativeToolTip": "proxy-simulator\\Controllers\\ProxyController.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABIAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-24T07:46:37.051Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
