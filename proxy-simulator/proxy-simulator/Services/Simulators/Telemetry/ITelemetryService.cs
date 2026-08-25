@@ -1,6 +1,6 @@
 ﻿namespace proxy_simulator.Interfaces
 {
-    public interface IProxyService
+    public interface ITelemetryService
     {
     }
 }

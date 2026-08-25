@@ -3,6 +3,7 @@ using proxy_simulator.Config;
 using proxy_simulator.Services;
 using proxy_simulator.Constants;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 AppConfig.Configuration = builder.Configuration;
@@ -11,6 +12,11 @@ AppConfig.Configuration = builder.Configuration;
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IDBService, SQLiteService>();
+builder.Services.AddSingleton<IDeviceService, DeviceService>();
+builder.Services.AddHttpClient<IMultimediaServiceAPI, MultimediaServiceAPI>( client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5002/");   
+});
 
 var app = builder.Build();
 

@@ -4,13 +4,18 @@
     {
         public sealed class AddDevice
         {
-            public required string deviceName { get; init; }
+            public required IFormFile multimediaFile { get; init; }
+            public required IFormFile telemetryFile { get; init; }
         }
         public sealed class RemoveDevice
         {
             public required string deviceName { get; init; }
         }
-        public sealed class UpdateDevice
+        public sealed class StartDeviceChanneles
+        {
+            public required string deviceName { get; init; }
+        }
+        public sealed class StopDeviceChanneles
         {
             public required string deviceName { get; init; }
         }
