@@ -1,8 +1,7 @@
-using multimedia_simulator.Interfaces;
-using proxy_simulator.Config;
 using proxy_simulator.Interfaces;
+using proxy_simulator.Config;
 using proxy_simulator.Services;
-using System.Runtime.CompilerServices;
+using proxy_simulator.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,18 +25,19 @@ var lifetime = app.Lifetime;
 //==================== On Started ====================
 lifetime.ApplicationStarted.Register(async () =>
 {
-    app.Logger.LogInformation("--> [Lifecycle] Application Started: initializing DB...");
+    app.Logger.LogInformation(ProgramConstants.Logs.LifeCycle.INIT_LOG);
+    app.Logger.LogInformation(ProgramConstants.Logs.LifeCycle.STARTING_LOG);
     await dbService.CreateConnectionAndInitialize();
 });
 //==================== On Stopping-Graceful Shutdown ====================
-lifetime.ApplicationStopping.Register(async () =>
+lifetime.ApplicationStopping.Register(() =>
 {
-    app.Logger.LogInformation("--> [Lifecycle] Graceful Shutdown: Server is shutting down, cleaning up...");
+    app.Logger.LogInformation(ProgramConstants.Logs.LifeCycle.STOPING_LOG);
 });
 //==================== On Stopped ====================
 lifetime.ApplicationStopped.Register(() =>
 {
-    app.Logger.LogInformation("--> [Lifecycle] Application Stopped: Server is completely closed.");
+    app.Logger.LogInformation(ProgramConstants.Logs.LifeCycle.STOPED_LOG);
 });
 //============== END-Application Lifecycle Events-END ==============
 

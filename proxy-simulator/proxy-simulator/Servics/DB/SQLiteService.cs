@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.Sqlite;
-using multimedia_simulator.Interfaces;
+using proxy_simulator.Interfaces;
 using proxy_simulator.Config;
 using proxy_simulator.Constants;
 
@@ -8,10 +8,8 @@ namespace proxy_simulator.Services
 {
     public class SQLiteService : IDBService, IAsyncDisposable
     {
-        private const string SETTING_DB = "SQLiteDbPath";
-        private const string DEFUALT_PATH = "simulator-proxy.db";
+        
         private readonly ILogger<SQLiteService> _logger;
-        private string DEFUALT_DB_PATH = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DEFUALT_PATH);
 
         //============properites=======================
         private string _connectionPath;
@@ -26,7 +24,7 @@ namespace proxy_simulator.Services
         }
         public SQLiteService(ILogger<SQLiteService> logger)
         {
-            this._connectionPath = AppConfig.Configuration.GetConnectionString(SETTING_DB) ?? 
+            this._connectionPath = AppConfig.Configuration.GetConnectionString(DBConstants.Settings.APP_SETTING_KEY) ?? 
                 throw new KeyNotFoundException(DBConstants.ConfigExceptions.PATH_NOT_IN_CONF);
             this._logger = logger;
         }
@@ -46,9 +44,9 @@ namespace proxy_simulator.Services
 
         public async Task InitializeDatabaseAsync()
         {
-            string initScript = this.AllTables();
+            string initScript = this.GetTablesQuery();
             await this.ExecuteAsync(initScript);
-            this._logger.LogInformation("[SQLiteService] DB is ready!");
+            this._logger.LogInformation(DBConstants.Logs.SUCCESSFULLY_READY_LOG);
         }
 
         public async Task CloseConnection()
@@ -105,11 +103,11 @@ namespace proxy_simulator.Services
                 this._sqliteConnection = null!;
             }
             this._semaphoreLock.Dispose();
-            this._logger.LogInformation("[SQLiteService] DB is closed and disposed.");
+            this._logger.LogInformation(DBConstants.Logs.SUCCESSFULLY_CLEAR_N_DISPOSE_LOG_);
         }
         
         // --------------------private/helper functions-------------------
-        private string AllTables()
+        private string GetTablesQuery()
         {
             const string initScript = @"
                 PRAGMA journal_mode = WAL;
