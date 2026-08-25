@@ -1,80 +1,81 @@
-﻿//---------Microsoft space-------------
-using Microsoft.AspNetCore.Mvc;
-//-------------END----------------------
-
-//--------porxy simulatur space---------
+﻿using Microsoft.AspNetCore.Mvc;
+using proxy_simulator.Constants;
 using proxy_simulator.DTOs;
 using proxy_simulator.Interfaces;
-//-------------END----------------------
-
 
 namespace proxy_simulator.Controllers
 {
     [ApiController]
-    [Route("api/v1.0/sp")]// add Versioning
+    [Route("api/v1.0/sp")]
     public class DeviceController : ControllerBase
     {
-        //----------dependency injection-------------
         private readonly IDeviceService _deviceService;
-        private readonly ILogger _logger;
-        //------------------END----------------------
+        private readonly ILogger<DeviceController> _logger;
 
-        public DeviceController(IDeviceService deviceService, ILogger<DeviceController> logger) 
+        public DeviceController(IDeviceService deviceService, ILogger<DeviceController> logger)
         {
-           this._deviceService = deviceService; 
-           this._logger = logger;
+            _deviceService = deviceService;
+            _logger = logger;
         }
 
         //==============================Devices==============================================================
         [HttpPost("Devices")]
-        public async Task<IActionResult> AddDevice(DevicesDTOs.AddDevice requestDto)
-        { 
-            this._logger.LogInformation($"[Controller->Device] AddDevice endpoint activated for {requestDto.telemetryFile.FileName} and {requestDto.multimediaFile.FileName}.");
-            return Ok(new { succes = await this._deviceService.AddDevice(requestDto) });
+        public async Task<IActionResult> AddDevice([FromForm] DevicesDTOs.AddDevice requestDto)
+        {
+            _logger.LogInformation(ControllersLogs.Device.ADD_DEVICE_ACTIVATED,requestDto.telemetryFile.FileName, requestDto.multimediaFile.FileName);
+
+            var result = await _deviceService.AddDevice(requestDto);
+            return Ok(new { success = result });
         }
 
         [HttpDelete("Devices")]
-        public async Task<IActionResult> RemoveDevice(DevicesDTOs.RemoveDevice requestDto)
+        public async Task<IActionResult> RemoveDevice([FromBody] DevicesDTOs.RemoveDevice requestDto)
         {
-            this._logger.LogInformation($"[Controller->Device] RemoveDevice endpoint activated for {requestDto.deviceName}.");
-            return Ok(new { succes = await this._deviceService.RemoveDevice(requestDto)});
+            _logger.LogInformation(ControllersLogs.Device.REMOVE_DEVICE_ACTIVATED, requestDto.deviceName);
+
+            var result = await _deviceService.RemoveDevice(requestDto);
+            return Ok(new { success = result });
         }
 
         [HttpGet("Devices")]
         public async Task<IActionResult> GetAllDevices()
         {
-            this._logger.LogInformation("[Controller->Device] GetAllDevices endpoint activated.");
-            return Ok(new { msg = "GetAllDevices RemoveDevice Working on it...." });
+            _logger.LogInformation(ControllersLogs.Device.GET_ALL_DEVICES_ACTIVATED);
+            return Ok(new { msg = "GetAllDevices Working on it...." });
         }
-        
-        //==============================Channels=================================================================
+
+        //==============================Channels=============================================================
         [HttpPost("Devices/Start")]
-        public async Task<IActionResult> StartDeviceChanneles(DevicesDTOs.StartDeviceChanneles requestDto)
+        public async Task<IActionResult> StartDeviceChanneles([FromBody] DevicesDTOs.StartDeviceChanneles requestDto)
         {
-            this._logger.LogInformation($"[Controller->Device] StartDeviceChanneles endpoint activated for {requestDto.deviceName}.");
-            return Ok(new { succes = await this._deviceService.StartDeviceChanneles(requestDto) });
+            _logger.LogInformation(ControllersLogs.Device.START_DEVICE_CHANNELS_ACTIVATED, requestDto.deviceName);
+
+            var result = await _deviceService.StartDeviceChanneles(requestDto);
+            return Ok(new { success = result });
         }
 
         [HttpPost("Devices/Stop")]
-        public async Task<IActionResult> StopDeviceChanneles(DevicesDTOs.StopDeviceChanneles requestDto)
+        public async Task<IActionResult> StopDeviceChanneles([FromBody] DevicesDTOs.StopDeviceChanneles requestDto)
         {
-            this._logger.LogInformation($"[Controller->Device] StopDeviceChanneles endpoint activated for {requestDto.deviceName}.");
-            return Ok(new { succes = await this._deviceService.StopDeviceChanneles(requestDto) });
+            _logger.LogInformation(ControllersLogs.Device.STOP_DEVICE_CHANNELS_ACTIVATED, requestDto.deviceName);
+
+            var result = await _deviceService.StopDeviceChanneles(requestDto);
+            return Ok(new { success = result });
         }
 
         [HttpPost("Devices/StartAll")]
         public async Task<IActionResult> StartAllDevicesChanneles()
         {
-            this._logger.LogInformation("[Controller->Device] StartAllDevicesChanneles endpoint activated.");
-            return Ok(new { msg = "StartAllDevicesChanneles RemoveDevice Working on it...." });
+            _logger.LogInformation(ControllersLogs.Device.START_ALL_DEVICES_CHANNELS_ACTIVATED);
+            return Ok(new { msg = "StartAllDevicesChanneles Working on it...." });
         }
 
         [HttpPost("Devices/StopAll")]
         public async Task<IActionResult> StopAllDevicesChanneles()
         {
-            this._logger.LogInformation("[Controller->Device] StopAllDevicesChanneles endpoint activated.");
-            return Ok(new { msg = "StopAllDevicesChanneles RemoveDevice Working on it...." });
+            _logger.LogInformation(ControllersLogs.Device.STOP_ALL_DEVICES_CHANNELS_ACTIVATED);
+            return Ok(new { msg = "StopAllDevicesChanneles Working on it...." });
         }
-        //====================================END==================================================================
+        //====================================END============================================================
     }
 }

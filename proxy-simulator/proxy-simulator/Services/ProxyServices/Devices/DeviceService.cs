@@ -19,6 +19,7 @@ namespace proxy_simulator.Services
         }
         
         //=================inhrted functions=========================================================================
+        //Call me when you see it!
         public async Task<bool> AddDevice(DevicesDTOs.AddDevice requestDto)
         {
             bool res = await this._multimediaServiceAPI.UploadFileAsync(requestDto.multimediaFile.OpenReadStream(),requestDto.multimediaFile.FileName);

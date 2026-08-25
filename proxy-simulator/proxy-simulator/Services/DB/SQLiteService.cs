@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.Data.Sqlite;
 using proxy_simulator.Interfaces;
 using proxy_simulator.Config;
@@ -11,17 +11,18 @@ namespace proxy_simulator.Services
         
         private readonly ILogger<SQLiteService> _logger;
 
-        //============properites=======================
-        private string _connectionPath;
+        //============properties=======================
+        private readonly string _connectionPath;
         private SqliteConnection _sqliteConnection = null!;
-        private readonly SemaphoreSlim _semaphoreLock = new SemaphoreSlim(initialCount: 1, maxCount: 1); // To ensure thread safety for database operations
+        private readonly SemaphoreSlim _semaphoreLock = new SemaphoreSlim(initialCount: 1, maxCount: 1);
 
         // --------------------constructors----------------
         public SQLiteService(string connectionPath, ILogger<SQLiteService> logger)
         {
-           this._connectionPath = connectionPath;
-            this._logger = logger;
+            _connectionPath = connectionPath;
+            _logger = logger;
         }
+
         public SQLiteService(ILogger<SQLiteService> logger)
         {
             this._connectionPath = AppConfig.Configuration.GetConnectionString(DBConstants.Settings.APP_SETTING_KEY) ?? 
@@ -32,14 +33,17 @@ namespace proxy_simulator.Services
         //--------------------interface functions-------------------
         public async Task CreateConnectionAndInitialize(CancellationToken cancellationToken = default)
         {
-            SqliteConnectionStringBuilder builder = new SqliteConnectionStringBuilder
+            var builder = new SqliteConnectionStringBuilder
             {
-                DataSource = this._connectionPath,
+                DataSource = _connectionPath,
                 ForeignKeys = true
             };
-            this._sqliteConnection = new SqliteConnection(builder.ConnectionString);
-            await this._sqliteConnection.OpenAsync(cancellationToken);
-            await this.InitializeDatabaseAsync();
+
+            _sqliteConnection = new SqliteConnection(builder.ConnectionString);
+            await _sqliteConnection.OpenAsync(cancellationToken);
+            _logger.LogInformation(ServicesLogs.SQLite.CONNECTION_OPENED, builder.DataSource);
+
+            await InitializeDatabaseAsync();
         }
 
         public async Task InitializeDatabaseAsync()
@@ -51,61 +55,77 @@ namespace proxy_simulator.Services
 
         public async Task CloseConnection()
         {
-            await this.DisposeAsync();
+            await DisposeAsync();
         }
 
         //--------------------Dapper wrapper functions(sqlite commands)-------------------
         public async Task<int> ExecuteAsync(string query, object? parameters = null)
         {
-            await this._semaphoreLock.WaitAsync();
+            await _semaphoreLock.WaitAsync();
             try
             {
-                return await this._sqliteConnection.ExecuteAsync(query, parameters);
+                return await _sqliteConnection.ExecuteAsync(query, parameters);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ServicesLogs.SQLite.DB_OPERATION_FAILED, query);
+                throw;
             }
             finally
             {
                 _semaphoreLock.Release();
             }
         }
+
         public async Task<IEnumerable<T>> QueryAsync<T>(string query, object? parameters = null)
         {
             await _semaphoreLock.WaitAsync();
             try
             {
-                return await this._sqliteConnection.QueryAsync<T>(query, parameters);
+                return await _sqliteConnection.QueryAsync<T>(query, parameters);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ServicesLogs.SQLite.DB_OPERATION_FAILED, query);
+                throw;
             }
             finally
             {
                 _semaphoreLock.Release();
             }
         }
+
         public async Task<T?> QuerySingleOrDefaultAsync<T>(string query, object? parameters = null)
         {
             await _semaphoreLock.WaitAsync();
             try
             {
-                return await this._sqliteConnection.QuerySingleOrDefaultAsync<T>(query, parameters);
+                return await _sqliteConnection.QuerySingleOrDefaultAsync<T>(query, parameters);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ServicesLogs.SQLite.DB_OPERATION_FAILED, query);
+                throw;
             }
             finally
             {
                 _semaphoreLock.Release();
             }
         }
-        //-----------------------------------------------------------------------------------
 
         //==================================Exit=============================================
         public async ValueTask DisposeAsync()
-        { 
-            if(this._sqliteConnection is not null)
+        {
+            if (_sqliteConnection is not null)
             {
-                await this._sqliteConnection.CloseAsync();
-                await this._sqliteConnection.DisposeAsync();
-                this._sqliteConnection = null!;
+                await _sqliteConnection.CloseAsync();
+                await _sqliteConnection.DisposeAsync();
+                _sqliteConnection = null!;
             }
             this._semaphoreLock.Dispose();
             this._logger.LogInformation(DBConstants.Logs.SUCCESSFULLY_CLEAR_N_DISPOSE_LOG_);
         }
-        
+
         // --------------------private/helper functions-------------------
         private string GetTablesQuery()
         {
@@ -121,7 +141,7 @@ namespace proxy_simulator.Services
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Type TEXT NOT NULL,
                     SimId INTEGER NOT NULL,
-                    DeviceName TEXT NOT NULL,s
+                    DeviceName TEXT NOT NULL,
 
                     CONSTRAINT FK_Channels_Devices FOREIGN KEY (DeviceName) 
                         REFERENCES Devices(Name) ON DELETE CASCADE
