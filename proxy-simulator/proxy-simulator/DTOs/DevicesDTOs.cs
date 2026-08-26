@@ -7,10 +7,10 @@ namespace proxy_simulator.DTOs
         public sealed class AddDevice
         {
             [FromForm(Name = "multimediaFile")]
-            public IFormFile MultimediaFile { get; init; } = null!;
+            public IFormFile MultimediaFile { get; set; } = null!;
 
             [FromForm(Name = "telemetryFile")]
-            public IFormFile TelemetryFile { get; init; } = null!;
+            public IFormFile TelemetryFile { get; set; } = null!;
         }
         public sealed class RemoveDevice
         {

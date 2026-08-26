@@ -49,6 +49,11 @@ namespace proxy_simulator.Constants
             }
         }
 
+        public static class Telemetry 
+        {
+            public const string FILE_FORM = "application/octet-stream";
+        }
+
         public static class Program 
         {
             public static class Swagger

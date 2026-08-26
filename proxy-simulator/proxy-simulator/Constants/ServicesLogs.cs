@@ -54,6 +54,29 @@ namespace proxy_simulator.Constants
             public const string STOP_STREAM_FAILED = "[MultimediaService] Failed to stop stream '{StreamName}'. StatusCode: {StatusCode}, Error from server: {ServerError}";
             public const string STOP_STREAM_ERROR = "[MultimediaService] Error stopping stream '{StreamName}'.";
         }
+
+        public static class Telemetry
+        {
+            // Upload
+            public const string UPLOAD_KLV_SUCCESS = "[TelemetryService] KLV File '{FileName}' uploaded successfully.";
+            public const string UPLOAD_KLV_FAILED = "[TelemetryService] Failed to upload KLV file '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
+            public const string UPLOAD_KLV_ERROR = "[TelemetryService] Error uploading KLV file '{FileName}'.";
+
+            // Delete
+            public const string DELETE_KLV_SUCCESS = "[TelemetryService] KLV File '{FileName}' deleted successfully.";
+            public const string DELETE_KLV_FAILED = "[TelemetryService] Failed to delete KLV file '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
+            public const string DELETE_KLV_ERROR = "[TelemetryService] Error deleting KLV file '{FileName}'.";
+
+            // Start Stream
+            public const string START_STREAM_SUCCESS = "[TelemetryService] Telemetry stream started for '{FileName}'. Response: {Message}";
+            public const string START_STREAM_FAILED = "[TelemetryService] Failed to start telemetry stream for '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
+            public const string START_STREAM_ERROR = "[TelemetryService] Error starting telemetry stream for '{FileName}'.";
+
+            // Stop Stream
+            public const string STOP_STREAM_SUCCESS = "[TelemetryService] Telemetry stream stopped for '{FileName}'. Response: {Message}";
+            public const string STOP_STREAM_FAILED = "[TelemetryService] Failed to stop telemetry stream for '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
+            public const string STOP_STREAM_ERROR = "[TelemetryService] Error stopping telemetry stream for '{FileName}'.";
+        }
         public static class SQLite
         {
             public const string DB_INITIALIZED = "[SQLiteService] DB is ready!\n\n";

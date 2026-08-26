@@ -13,11 +13,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//======================DI's======================================
 builder.Services.AddSingleton<IDBService, SQLiteService>();
 builder.Services.AddSingleton<IDeviceService, DeviceService>();
-builder.Services.AddHttpClient<IMultimediaServiceAPI, MultimediaServiceAPI>( client =>
+//=====================Http client's==============================
+builder.Services.AddHttpClient<IMultimediaServiceAPI, MultimediaServiceAPI>
+(MultimediaSimulator =>
 {
-    client.BaseAddress = new Uri("http://localhost:5000/");   
+    MultimediaSimulator.BaseAddress = new Uri("http://localhost:5000/");   
+});
+builder.Services.AddHttpClient<ITelemetryServiceAPI, TelemetryServiceAPI>
+(TelemetrySimulator =>
+{
+    TelemetrySimulator.BaseAddress = new Uri("http://localhost:8000/");
 });
 
 var app = builder.Build();
