@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using proxy_simulator.Constants;
 using proxy_simulator.DTOs;
 using proxy_simulator.Interfaces;
@@ -22,7 +23,7 @@ namespace proxy_simulator.Controllers
         [HttpPost("Devices")]
         public async Task<IActionResult> AddDevice([FromForm] DevicesDTOs.AddDevice requestDto)
         {
-            _logger.LogInformation(ControllersLogs.Device.ADD_DEVICE_ACTIVATED,requestDto.telemetryFile.FileName, requestDto.multimediaFile.FileName);
+            _logger.LogInformation(ControllersLogs.Device.ADD_DEVICE_ACTIVATED,requestDto.TelemetryFile.FileName, requestDto.MultimediaFile.FileName);
 
             var result = await _deviceService.AddDevice(requestDto);
             return Ok(new { success = result });
@@ -41,7 +42,7 @@ namespace proxy_simulator.Controllers
         public async Task<IActionResult> GetAllDevices()
         {
             _logger.LogInformation(ControllersLogs.Device.GET_ALL_DEVICES_ACTIVATED);
-            return Ok(new { msg = "GetAllDevices Working on it...." });
+            return Ok(new { msg = true });
         }
 
         //==============================Channels=============================================================
@@ -67,14 +68,14 @@ namespace proxy_simulator.Controllers
         public async Task<IActionResult> StartAllDevicesChanneles()
         {
             _logger.LogInformation(ControllersLogs.Device.START_ALL_DEVICES_CHANNELS_ACTIVATED);
-            return Ok(new { msg = "StartAllDevicesChanneles Working on it...." });
+            return Ok(new { success = true });
         }
 
         [HttpPost("Devices/StopAll")]
         public async Task<IActionResult> StopAllDevicesChanneles()
         {
             _logger.LogInformation(ControllersLogs.Device.STOP_ALL_DEVICES_CHANNELS_ACTIVATED);
-            return Ok(new { msg = "StopAllDevicesChanneles Working on it...." });
+            return Ok(new { success = true });
         }
         //====================================END============================================================
     }

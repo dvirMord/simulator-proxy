@@ -1,4 +1,4 @@
-﻿namespace multimedia_simulator.Interfaces;
+﻿namespace proxy_simulator.Interfaces;
 
 public interface IDBService
 {

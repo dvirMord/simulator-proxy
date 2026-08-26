@@ -22,29 +22,22 @@ namespace proxy_simulator.Services
         //Call me when you see it!
         public async Task<bool> AddDevice(DevicesDTOs.AddDevice requestDto)
         {
-            bool res = await this._multimediaServiceAPI.UploadFileAsync(requestDto.multimediaFile.OpenReadStream(),requestDto.multimediaFile.FileName);
-            return res;
+            return true;
         }
 
         public async Task<bool> RemoveDevice(DevicesDTOs.RemoveDevice requestDto)
         {
-            MultimediaApiDTO.DeleteFileDTO dto = new MultimediaApiDTO.DeleteFileDTO { FileName = "klv_metadata_test_sync.ts" };
-            bool res = await this._multimediaServiceAPI.DeleteFileAsync(dto);
-            return res;
+            return true;
         }
 
         public async Task<bool> StartDeviceChanneles(DevicesDTOs.StartDeviceChanneles requestDto)
         {
-            MultimediaApiDTO.StartStreamDTO dto = new MultimediaApiDTO.StartStreamDTO { FileName = "klv_metadata_test_sync.ts", SourceFileId = 3};
-            bool res = await this._multimediaServiceAPI.StartStreamAsync(dto);
-            return res;
+            return true;
         }
 
         public async Task<bool> StopDeviceChanneles(DevicesDTOs.StopDeviceChanneles requestDto)
-        {
-            MultimediaApiDTO.StopStreamDTO dto = new MultimediaApiDTO.StopStreamDTO { StreamName = "klv_metadata_test_sync.ts" };
-            bool res = await this._multimediaServiceAPI.StopStreamAsync(dto);
-            return res;
+        { 
+            return true;
         }
     }
 }

@@ -6,7 +6,7 @@
         {
             // Upload File
             public const string UPLOAD_FILE_SUCCESS = "[MultimediaService] File '{FileName}' uploaded successfully.";
-            public const string UPLOAD_FILE_FAILED = "[MultimediaService] Failed to upload file '{FileName}'. StatusCode: {StatusCode}";
+            public const string UPLOAD_FILE_FAILED = "[MultimediaService] Failed to upload file '{FileName}'.[{StatusCode}]:{ServerError}";
             public const string UPLOAD_FILE_ERROR = "[MultimediaService] Error uploading file '{FileName}'.";
 
             // Delete File

@@ -25,8 +25,8 @@ namespace proxy_simulator.Services
 
         public SQLiteService(ILogger<SQLiteService> logger)
         {
-            this._connectionPath = AppConfig.Configuration.GetConnectionString(DBConstants.Settings.APP_SETTING_KEY) ?? 
-                throw new KeyNotFoundException(DBConstants.ConfigExceptions.PATH_NOT_IN_CONF);
+            this._connectionPath = AppConfig.Configuration.GetConnectionString(ServicesConstants.SQlite.Settings.APP_SETTING_KEY) ?? 
+                throw new KeyNotFoundException(ServicesLogs.SQLite.ConfigExceptions.PATH_NOT_IN_CONF);
             this._logger = logger;
         }
 
@@ -39,9 +39,9 @@ namespace proxy_simulator.Services
                 ForeignKeys = true
             };
 
-            _sqliteConnection = new SqliteConnection(builder.ConnectionString);
+            this._sqliteConnection = new SqliteConnection(builder.ConnectionString);
             await _sqliteConnection.OpenAsync(cancellationToken);
-            _logger.LogInformation(ServicesLogs.SQLite.CONNECTION_OPENED, builder.DataSource);
+            this._logger.LogInformation(ServicesLogs.SQLite.CONNECTION_OPENED, builder.DataSource);
 
             await InitializeDatabaseAsync();
         }
@@ -50,7 +50,6 @@ namespace proxy_simulator.Services
         {
             string initScript = this.GetTablesQuery();
             await this.ExecuteAsync(initScript);
-            this._logger.LogInformation(DBConstants.Logs.SUCCESSFULLY_READY_LOG);
         }
 
         public async Task CloseConnection()
@@ -123,7 +122,7 @@ namespace proxy_simulator.Services
                 _sqliteConnection = null!;
             }
             this._semaphoreLock.Dispose();
-            this._logger.LogInformation(DBConstants.Logs.SUCCESSFULLY_CLEAR_N_DISPOSE_LOG_);
+            this._logger.LogInformation(ServicesLogs.SQLite.DB_DISPOSED);
         }
 
         // --------------------private/helper functions-------------------

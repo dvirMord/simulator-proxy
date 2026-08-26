@@ -37,7 +37,8 @@ namespace proxy_simulator.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    _logger.LogWarning(ServicesLogs.Multimedia.UPLOAD_FILE_FAILED, fileName, response.StatusCode);
+                    var serverError = await response.Content.ReadAsStringAsync();
+                    _logger.LogWarning(ServicesLogs.Multimedia.UPLOAD_FILE_FAILED, fileName, response.StatusCode, serverError);
                     return false;
                 }
 

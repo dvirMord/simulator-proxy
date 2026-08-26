@@ -1,11 +1,16 @@
-﻿namespace proxy_simulator.DTOs
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace proxy_simulator.DTOs
 {
     public class DevicesDTOs
     {
         public sealed class AddDevice
         {
-            public required IFormFile multimediaFile { get; init; }
-            public required IFormFile telemetryFile { get; init; }
+            [FromForm(Name = "multimediaFile")]
+            public IFormFile MultimediaFile { get; init; } = null!;
+
+            [FromForm(Name = "telemetryFile")]
+            public IFormFile TelemetryFile { get; init; } = null!;
         }
         public sealed class RemoveDevice
         {
