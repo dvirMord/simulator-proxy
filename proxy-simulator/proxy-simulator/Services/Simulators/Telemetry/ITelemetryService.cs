@@ -1,4 +1,4 @@
-﻿using static proxy_simulator.DTOs.TelemetryApiDTO;
+using static proxy_simulator.DTOs.TelemetryApiDTO;
 
 namespace proxy_simulator.Interfaces
 {

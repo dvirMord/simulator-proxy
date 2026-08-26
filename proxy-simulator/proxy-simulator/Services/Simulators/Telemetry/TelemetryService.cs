@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using proxy_simulator.Constants;
 using proxy_simulator.Interfaces;
 using static proxy_simulator.DTOs.TelemetryApiDTO;
