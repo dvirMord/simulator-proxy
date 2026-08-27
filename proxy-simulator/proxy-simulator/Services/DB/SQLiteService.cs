@@ -125,7 +125,6 @@ namespace proxy_simulator.Services
             this._logger.LogInformation(ServicesLogs.SQLite.DB_DISPOSED);
         }
 
-        // --------------------private/helper functions------------------
         // ==================== Device & Channel Operations ====================
 
         public async Task<int> InsertDeviceAsync(string deviceName)
