@@ -13,11 +13,11 @@ namespace proxy_simulator.DTOs
 
             [Required]
             [FromForm(Name = "multimediaFile")]
-            public IFormFile MultimediaFile { get; set; } = null!;
+            public IFormFile MultimediaFile { get; init; } = null!;
 
             [Required]
             [FromForm(Name = "telemetryFile")]
-            public IFormFile TelemetryFile { get; set; } = null!;
+            public IFormFile TelemetryFile { get; init; } = null!;
         }
         public sealed class RemoveDevice
         {
