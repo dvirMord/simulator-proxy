@@ -21,7 +21,17 @@ namespace proxy_simulator.ROs
 
         public class Telemetry
         {
+            public sealed class UploadFileResponse
+            {
+                [JsonPropertyName("success")]
+                public bool Success { get; init; }
 
+                [JsonPropertyName("message")]
+                public string Message { get; init; } = string.Empty;
+
+                [JsonPropertyName("decodedId")]
+                public int DecodedId { get; init; }
+            }
         }
     }
 }
