@@ -1,5 +1,8 @@
+using proxy_simulator.Constants;
 using proxy_simulator.DTOs;
 using proxy_simulator.Interfaces;
+using static proxy_simulator.Constants.ServicesConstants.SQlite;
+using static proxy_simulator.Constants.ServicesConstants.SQlite.ChannelType;
 
 namespace proxy_simulator.Services
 {
@@ -8,6 +11,7 @@ namespace proxy_simulator.Services
         //==================Simulators Services=========================
         private readonly IMultimediaServiceAPI _multimediaServiceAPI;
         private readonly ITelemetryServiceAPI _telemetryServiceAPI;
+        private readonly IDBService _dBService;
         private readonly ILogger<DeviceService> _logger;
         private readonly IDBService _dBService;
         
@@ -16,18 +20,13 @@ namespace proxy_simulator.Services
         public DeviceService(
             ILogger<DeviceService> logger,
             IMultimediaServiceAPI multimediaServiceAPI,
-            ITelemetryServiceAPI telemetryServiceAPI)
-        private readonly ILogger<DeviceService> _logger;
-
-        public DeviceService(ILogger<DeviceService> looger, IMultimediaServiceAPI multimediaServiceAPI,
+            ITelemetryServiceAPI telemetryServiceAPI,
             IDBService dBService)
         {
             this._multimediaServiceAPI = multimediaServiceAPI;
-            this._logger = looger;
+            this._telemetryServiceAPI = telemetryServiceAPI;
+            this._logger = logger;
             this._dBService = dBService;
-            _multimediaServiceAPI = multimediaServiceAPI;
-            _telemetryServiceAPI = telemetryServiceAPI;
-            _logger = logger;
         }
 
         //=================Interface Implementations====================
@@ -36,18 +35,20 @@ namespace proxy_simulator.Services
             await using var multimediaStream = requestDto.MultimediaFile.OpenReadStream();
             await using var telemetryStream = requestDto.TelemetryFile.OpenReadStream();
 
-            var uploadMultimediaTask = _multimediaServiceAPI.UploadFileAsync(
+            await this._dBService.InsertDeviceAsync(requestDto.DeviceName);
+
+            var MultimediaSoureFileId = await _multimediaServiceAPI.UploadFileAsync(
                 multimediaStream,
                 requestDto.MultimediaFile.FileName
             );
 
-            var uploadTelemetryTask = _telemetryServiceAPI.UploadKlvFileAsync(
+            await this._dBService.InsertChannelAsync(ChannelType.Multimedia, MultimediaSoureFileId, requestDto.DeviceName);
+
+            var uploadTelemetryTask = await _telemetryServiceAPI.UploadKlvFileAsync(
                 telemetryStream,
                 requestDto.TelemetryFile.FileName
             );
-
-            var results = await Task.WhenAll(uploadMultimediaTask, uploadTelemetryTask);
-            return results[0] && results[1];
+            return true;
         }
 
         public async Task<bool> RemoveDevice(DevicesDTOs.RemoveDevice requestDto)
@@ -66,7 +67,15 @@ namespace proxy_simulator.Services
             var deleteTelemetryTask = _telemetryServiceAPI.DeleteKlvFileAsync(telemetryDto);
 
             var results = await Task.WhenAll(deleteMultimediaTask, deleteTelemetryTask);
-            return results[0] && results[1];
+
+            if (!results[0] || !results[1])
+            {
+                throw new InvalidOperationException(
+                    string.Format(ServicesLogs.Device.EXC_REMOVE_DEVICE_FAILED, requestDto.deviceName)
+                );
+            }
+
+            return true;
         }
 
         public async Task<bool> StartDeviceChanneles(DevicesDTOs.StartDeviceChanneles requestDto)
@@ -80,7 +89,7 @@ namespace proxy_simulator.Services
 
             var telemetryDto = new TelemetryApiDTO.StartStreamDTO
             {
-                FileName = "truck_decoded.txt"
+                FileName = ServicesLogs.Device.DEFAULT_TELEMETRY_STREAM_FILE
             };
 
             var startMultimediaTask = _multimediaServiceAPI.StartStreamAsync(multimediaDto);
@@ -91,7 +100,14 @@ namespace proxy_simulator.Services
             bool isMultimediaOk = await startMultimediaTask;
             var telemetryResponse = await startTelemetryTask;
 
-            return isMultimediaOk && (telemetryResponse is not null && telemetryResponse.Success);
+            if (!isMultimediaOk || telemetryResponse is null || !telemetryResponse.Success)
+            {
+                throw new InvalidOperationException(
+                    string.Format(ServicesLogs.Device.EXC_START_CHANNELS_FAILED, requestDto.deviceName)
+                );
+            }
+
+            return true;
         }
 
         public async Task<IEnumerable<string>> GetAllDevicesAsync()
@@ -119,7 +135,14 @@ namespace proxy_simulator.Services
             bool isMultimediaOk = await stopMultimediaTask;
             var telemetryResponse = await stopTelemetryTask;
 
-            return isMultimediaOk && (telemetryResponse is not null && telemetryResponse.Success);
+            if (!isMultimediaOk || telemetryResponse is null || !telemetryResponse.Success)
+            {
+                throw new InvalidOperationException(
+                    string.Format(ServicesLogs.Device.EXC_STOP_CHANNELS_FAILED, requestDto.deviceName)
+                );
+            }
+
+            return true;
         }
 
         public async Task<bool> StartAllDevicesChannelsAsync()

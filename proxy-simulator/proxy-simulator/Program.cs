@@ -12,15 +12,17 @@ AppConfig.Configuration = builder.Configuration;
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddProblemDetails();
 
 //======================DI's======================================
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddSingleton<IDBService, SQLiteService>();
 builder.Services.AddSingleton<IDeviceService, DeviceService>();
 //=====================Http client's==============================
 builder.Services.AddHttpClient<IMultimediaServiceAPI, MultimediaServiceAPI>
 (MultimediaSimulator =>
 {
-    MultimediaSimulator.BaseAddress = new Uri("http://localhost:5000/");   
+    MultimediaSimulator.BaseAddress = new Uri("http://localhost:5002/");   
 });
 builder.Services.AddHttpClient<ITelemetryServiceAPI, TelemetryServiceAPI>
 (TelemetrySimulator =>
@@ -68,6 +70,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseExceptionHandler();
+app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();

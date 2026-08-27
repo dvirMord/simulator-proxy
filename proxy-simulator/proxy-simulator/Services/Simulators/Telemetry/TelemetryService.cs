@@ -30,25 +30,29 @@ namespace proxy_simulator.Services
                 using var content = new MultipartFormDataContent();
                 using var streamContent = new StreamContent(fileStream);
                 streamContent.Headers.ContentType = new MediaTypeHeaderValue(ServicesConstants.Telemetry.FILE_FORM);
-
                 content.Add(streamContent, "file", fileName);
 
                 var response = await _httpClient.PostAsync(ServiceApi.FILES_API, content, cancellationToken);
+                var error = await response.Content.ReadAsStringAsync(cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string error = await response.Content.ReadAsStringAsync(cancellationToken);
                     _logger.LogWarning(ServicesLogs.Telemetry.UPLOAD_KLV_FAILED, fileName, response.StatusCode, error);
-                    return false;
+                    throw new HttpRequestException(string.Format(ServicesLogs.Telemetry.EXC_UPLOAD_KLV_FAILED, fileName, response.StatusCode, error), null, response.StatusCode);
                 }
 
                 _logger.LogInformation(ServicesLogs.Telemetry.UPLOAD_KLV_SUCCESS, fileName);
                 return true;
             }
-            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+            catch (HttpRequestException ex)
             {
                 _logger.LogError(ex, ServicesLogs.Telemetry.UPLOAD_KLV_ERROR, fileName);
-                return false;
+                throw;
+            }
+            catch (TaskCanceledException ex)
+            {
+                _logger.LogError(ex, ServicesLogs.Telemetry.UPLOAD_KLV_ERROR, fileName);
+                throw;
             }
         }
 
@@ -62,69 +66,88 @@ namespace proxy_simulator.Services
                 };
 
                 var response = await _httpClient.SendAsync(request, cancellationToken);
+                var error = await response.Content.ReadAsStringAsync(cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string error = await response.Content.ReadAsStringAsync(cancellationToken);
                     _logger.LogWarning(ServicesLogs.Telemetry.DELETE_KLV_FAILED, dto.FileName, response.StatusCode, error);
-                    return false;
+                    throw new HttpRequestException(string.Format(ServicesLogs.Telemetry.EXC_DELETE_KLV_FAILED, dto.FileName, response.StatusCode, error), null, response.StatusCode);
                 }
 
                 _logger.LogInformation(ServicesLogs.Telemetry.DELETE_KLV_SUCCESS, dto.FileName);
                 return true;
             }
-            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+            catch (HttpRequestException ex)
             {
                 _logger.LogError(ex, ServicesLogs.Telemetry.DELETE_KLV_ERROR, dto.FileName);
-                return false;
+                throw;
+            }
+            catch (TaskCanceledException ex)
+            {
+                _logger.LogError(ex, ServicesLogs.Telemetry.DELETE_KLV_ERROR, dto.FileName);
+                throw;
             }
         }
 
-        public async Task<StreamResponseDTO?> StartStreamAsync(StartStreamDTO dto, CancellationToken cancellationToken = default)
+        public async Task<StreamResponseDTO> StartStreamAsync(StartStreamDTO dto, CancellationToken cancellationToken = default)
         {
             try
             {
                 var response = await _httpClient.PostAsJsonAsync(ServiceApi.START_STREAM_API, dto, cancellationToken);
+                var error = await response.Content.ReadAsStringAsync(cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string error = await response.Content.ReadAsStringAsync(cancellationToken);
                     _logger.LogWarning(ServicesLogs.Telemetry.START_STREAM_FAILED, dto.FileName, response.StatusCode, error);
-                    return null;
+                    throw new HttpRequestException(string.Format(ServicesLogs.Telemetry.EXC_START_STREAM_FAILED, dto.FileName, response.StatusCode, error), null, response.StatusCode);
                 }
 
-                var result = await response.Content.ReadFromJsonAsync<StreamResponseDTO>(cancellationToken: cancellationToken);
-                _logger.LogInformation(ServicesLogs.Telemetry.START_STREAM_SUCCESS, dto.FileName, result?.Message ?? string.Empty);
+                var result = await response.Content.ReadFromJsonAsync<StreamResponseDTO>(cancellationToken: cancellationToken)
+                    ?? throw new InvalidOperationException(string.Format(ServicesLogs.Telemetry.EXC_START_STREAM_INVALID_RESPONSE, dto.FileName));
+
+                _logger.LogInformation(ServicesLogs.Telemetry.START_STREAM_SUCCESS, dto.FileName, result.Message);
                 return result;
             }
-            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+            catch (HttpRequestException ex)
             {
                 _logger.LogError(ex, ServicesLogs.Telemetry.START_STREAM_ERROR, dto.FileName);
-                return null;
+                throw;
+            }
+            catch (TaskCanceledException ex)
+            {
+                _logger.LogError(ex, ServicesLogs.Telemetry.START_STREAM_ERROR, dto.FileName);
+                throw;
             }
         }
 
-        public async Task<StreamResponseDTO?> StopStreamAsync(StopStreamDTO dto, CancellationToken cancellationToken = default)
+        public async Task<StreamResponseDTO> StopStreamAsync(StopStreamDTO dto, CancellationToken cancellationToken = default)
         {
             try
             {
                 var response = await _httpClient.PostAsJsonAsync(ServiceApi.STOP_STREAM_API, dto, cancellationToken);
+                var error = await response.Content.ReadAsStringAsync(cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string error = await response.Content.ReadAsStringAsync(cancellationToken);
                     _logger.LogWarning(ServicesLogs.Telemetry.STOP_STREAM_FAILED, dto.FileName, response.StatusCode, error);
-                    return null;
+                    throw new HttpRequestException(string.Format(ServicesLogs.Telemetry.EXC_STOP_STREAM_FAILED, dto.FileName, response.StatusCode, error), null, response.StatusCode);
                 }
 
-                var result = await response.Content.ReadFromJsonAsync<StreamResponseDTO>(cancellationToken: cancellationToken);
-                _logger.LogInformation(ServicesLogs.Telemetry.STOP_STREAM_SUCCESS, dto.FileName, result?.Message ?? string.Empty);
+                var result = await response.Content.ReadFromJsonAsync<StreamResponseDTO>(cancellationToken: cancellationToken)
+                    ?? throw new InvalidOperationException(string.Format(ServicesLogs.Telemetry.STOP_STREAM_FAILED, dto.FileName,response.StatusCode, error));
+
+                _logger.LogInformation(ServicesLogs.Telemetry.STOP_STREAM_SUCCESS, dto.FileName, result.Message);
                 return result;
             }
-            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, ServicesLogs.Telemetry.START_STREAM_ERROR, dto.FileName);
+                throw;
+            }
+            catch (TaskCanceledException ex)
             {
                 _logger.LogError(ex, ServicesLogs.Telemetry.STOP_STREAM_ERROR, dto.FileName);
-                return null;
+                throw;
             }
         }
     }

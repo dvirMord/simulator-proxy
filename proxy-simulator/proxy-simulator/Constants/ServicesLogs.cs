@@ -34,67 +34,187 @@ namespace proxy_simulator.Constants
 
         public static class Multimedia
         {
+            // ==================== Exceptions ====================
+
             // Upload File
-            public const string UPLOAD_FILE_SUCCESS = "[MultimediaService] File '{FileName}' uploaded successfully.";
-            public const string UPLOAD_FILE_FAILED = "[MultimediaService] Failed to upload file '{FileName}'.[{StatusCode}]:{ServerError}";
-            public const string UPLOAD_FILE_ERROR = "[MultimediaService] Error uploading file '{FileName}'.";
+            public const string EXC_UPLOAD_FILE_FAILED =
+                "Failed to upload file '{0}'. StatusCode: {1}. ServerResponse: {2}";
+
+            public const string EXC_UPLOAD_FILE_ERROR =
+                "An error occurred while uploading file '{0}'.";
+
+            public const string EXC_UPLOAD_FILE_INVALID_RESPONSE =
+                "Invalid response received while uploading file '{0}'.";
+
+            public const string EXC_UPLOAD_FILE_SERVER_REJECTED =
+                "Server rejected upload for file '{0}'. Message: {1}";
+
 
             // Delete File
-            public const string DELETE_FILE_SUCCESS = "[MultimediaService] File '{FileName}' deleted successfully.";
-            public const string DELETE_FILE_FAILED = "[MultimediaService] Failed to delete file '{FileName}'. StatusCode: {StatusCode}";
-            public const string DELETE_FILE_ERROR = "[MultimediaService] Error deleting file '{FileName}'.";
+            public const string EXC_DELETE_FILE_FAILED =
+                "Failed to delete file '{0}'. StatusCode: {1}. ServerResponse: {2}";
+
+            public const string EXC_DELETE_FILE_ERROR =
+                "An error occurred while deleting file '{0}'.";
+
 
             // Start Stream
-            public const string START_STREAM_SUCCESS = "[MultimediaService] Stream started successfully for file '{FileName}' (SourceFileId: {SourceFileId}).";
-            public const string START_STREAM_FAILED = "[MultimediaService] Failed to start stream for file '{FileName}'. StatusCode: {StatusCode}, Error from server: {ServerError}";
-            public const string START_STREAM_ERROR = "[MultimediaService] Error starting stream for file '{FileName}'.";
+            public const string EXC_START_STREAM_FAILED =
+                "Failed to start stream for file '{0}'. StatusCode: {1}. ServerResponse: {2}";
+
+            public const string EXC_START_STREAM_ERROR =
+                "An error occurred while starting stream for file '{0}'.";
+
 
             // Stop Stream
-            public const string STOP_STREAM_SUCCESS = "[MultimediaService] Stream '{StreamName}' stopped successfully.";
-            public const string STOP_STREAM_FAILED = "[MultimediaService] Failed to stop stream '{StreamName}'. StatusCode: {StatusCode}, Error from server: {ServerError}";
-            public const string STOP_STREAM_ERROR = "[MultimediaService] Error stopping stream '{StreamName}'.";
+            public const string EXC_STOP_STREAM_FAILED =
+                "Failed to stop stream '{0}'. StatusCode: {1}. ServerResponse: {2}";
+
+            public const string EXC_STOP_STREAM_ERROR =
+                "An error occurred while stopping stream '{0}'.";
+
+
+            // ==================== Logs ====================
+
+            // Upload File
+            public const string UPLOAD_FILE_SUCCESS =
+                "[MultimediaService] File '{FileName}' uploaded successfully.";
+
+            public const string UPLOAD_FILE_FAILED =
+                "[MultimediaService] Failed to upload file '{FileName}'.[{StatusCode}]:{ServerError}";
+
+            public const string UPLOAD_FILE_ERROR =
+                "[MultimediaService] Error uploading file '{FileName}'.";
+
+
+            // Delete File
+            public const string DELETE_FILE_SUCCESS =
+                "[MultimediaService] File '{FileName}' deleted successfully.";
+
+            public const string DELETE_FILE_FAILED =
+                "[MultimediaService] Failed to delete file '{FileName}'. StatusCode: {StatusCode}";
+
+            public const string DELETE_FILE_ERROR =
+                "[MultimediaService] Error deleting file '{FileName}'.";
+
+
+            // Start Stream
+            public const string START_STREAM_SUCCESS =
+                "[MultimediaService] Stream started successfully for file '{FileName}' (SourceFileId: {SourceFileId}).";
+
+            public const string START_STREAM_FAILED =
+                "[MultimediaService] Failed to start stream for file '{FileName}'. StatusCode: {StatusCode}, Error from server: {ServerError}";
+
+            public const string START_STREAM_ERROR =
+                "[MultimediaService] Error starting stream for file '{FileName}'.";
+
+
+            // Stop Stream
+            public const string STOP_STREAM_SUCCESS =
+                "[MultimediaService] Stream '{StreamName}' stopped successfully.";
+
+            public const string STOP_STREAM_FAILED =
+                "[MultimediaService] Failed to stop stream '{StreamName}'. StatusCode: {StatusCode}, Error from server: {ServerError}";
+
+            public const string STOP_STREAM_ERROR =
+                "[MultimediaService] Error stopping stream '{StreamName}'.";
         }
 
         public static class Telemetry
         {
+            public const string EXC_UPLOAD_KLV_FAILED =
+                "Failed to upload KLV file '{0}'. StatusCode: {1}. ServerResponse: {2}";
+
+            public const string EXC_DELETE_KLV_FAILED =
+                "Failed to delete KLV file '{0}'. StatusCode: {1}. ServerResponse: {2}";
+
+            public const string EXC_START_STREAM_FAILED =
+                "Failed to start telemetry stream for '{0}'. StatusCode: {1}. ServerResponse: {2}";
+
+            public const string EXC_STOP_STREAM_FAILED =
+                "Failed to stop telemetry stream for '{0}'. StatusCode: {1}. ServerResponse: {2}";
+
+            public const string EXC_START_STREAM_INVALID_RESPONSE =
+                "Invalid response received while starting telemetry stream for '{0}'.";
+
+            public const string EXC_STOP_STREAM_INVALID_RESPONSE =
+                "Invalid response received while stopping telemetry stream for '{0}'.";
+
             // Upload
-            public const string UPLOAD_KLV_SUCCESS = "[TelemetryService] KLV File '{FileName}' uploaded successfully.";
-            public const string UPLOAD_KLV_FAILED = "[TelemetryService] Failed to upload KLV file '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
-            public const string UPLOAD_KLV_ERROR = "[TelemetryService] Error uploading KLV file '{FileName}'.";
+            public const string UPLOAD_KLV_SUCCESS =
+                "[TelemetryService] KLV File '{FileName}' uploaded successfully.";
+
+            public const string UPLOAD_KLV_FAILED =
+                "[TelemetryService] Failed to upload KLV file '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
+
+            public const string UPLOAD_KLV_ERROR =
+                "[TelemetryService] Error uploading KLV file '{FileName}'.";
 
             // Delete
-            public const string DELETE_KLV_SUCCESS = "[TelemetryService] KLV File '{FileName}' deleted successfully.";
-            public const string DELETE_KLV_FAILED = "[TelemetryService] Failed to delete KLV file '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
-            public const string DELETE_KLV_ERROR = "[TelemetryService] Error deleting KLV file '{FileName}'.";
+            public const string DELETE_KLV_SUCCESS =
+                "[TelemetryService] KLV File '{FileName}' deleted successfully.";
+
+            public const string DELETE_KLV_FAILED =
+                "[TelemetryService] Failed to delete KLV file '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
+
+            public const string DELETE_KLV_ERROR =
+                "[TelemetryService] Error deleting KLV file '{FileName}'.";
 
             // Start Stream
-            public const string START_STREAM_SUCCESS = "[TelemetryService] Telemetry stream started for '{FileName}'. Response: {Message}";
-            public const string START_STREAM_FAILED = "[TelemetryService] Failed to start telemetry stream for '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
-            public const string START_STREAM_ERROR = "[TelemetryService] Error starting telemetry stream for '{FileName}'.";
+            public const string START_STREAM_SUCCESS =
+                "[TelemetryService] Telemetry stream started for '{FileName}'. Response: {Message}";
+
+            public const string START_STREAM_FAILED =
+                "[TelemetryService] Failed to start telemetry stream for '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
+
+            public const string START_STREAM_ERROR =
+                "[TelemetryService] Error starting telemetry stream for '{FileName}'.";
 
             // Stop Stream
-            public const string STOP_STREAM_SUCCESS = "[TelemetryService] Telemetry stream stopped for '{FileName}'. Response: {Message}";
-            public const string STOP_STREAM_FAILED = "[TelemetryService] Failed to stop telemetry stream for '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
-            public const string STOP_STREAM_ERROR = "[TelemetryService] Error stopping telemetry stream for '{FileName}'.";
+            public const string STOP_STREAM_SUCCESS =
+                "[TelemetryService] Telemetry stream stopped for '{FileName}'. Response: {Message}";
+
+            public const string STOP_STREAM_FAILED =
+                "[TelemetryService] Failed to stop telemetry stream for '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
+
+            public const string STOP_STREAM_ERROR =
+                "[TelemetryService] Error stopping telemetry stream for '{FileName}'.";
         }
+
         public static class SQLite
         {
-            public const string DB_INITIALIZED = "[SQLiteService] DB is ready!\n\n";
-            public const string DB_DISPOSED = "[SQLiteService] DB is closed and disposed.";
-            public const string CONNECTION_OPENED = "[SQLiteService] Connection established successfully to '{DataSource}'.";
-            public const string DB_OPERATION_FAILED = "[SQLiteService] Database operation failed for query: {Query}";
+            public const string DB_INITIALIZED =
+                "[SQLiteService] DB is ready!\n\n";
+
+            public const string DB_DISPOSED =
+                "[SQLiteService] DB is closed and disposed.";
+
+            public const string CONNECTION_OPENED =
+                "[SQLiteService] Connection established successfully to '{DataSource}'.";
+
+            public const string DB_OPERATION_FAILED =
+                "[SQLiteService] Database operation failed for query: {Query}";
+
             public static class ConfigExceptions
             {
-                public const string PATH_NOT_IN_CONF = "Connection string 'SQLiteDbPath' was not found in configuration.";
+                public const string PATH_NOT_IN_CONF =
+                    "Connection string 'SQLiteDbPath' was not found in configuration.";
             }
         }
 
         public static class Lifecycle
         {
-            public const string APP_STARTED_INIT_DB = "--> [Lifecycle] Application Started: initializing DB...";
-            public const string APP_STOPPING_GRACEFUL = "--> [Lifecycle] Graceful Shutdown: Server is shutting down";
-            public const string APP_STOPPED_CLEANUP = "--> [Lifecycle] Application Stopped: Server is completely closed, cleaning up...";
-            public const string BANNER_API_LOGS = "\n\n\n==============================Application API logs:======================================";
+            public const string APP_STARTED_INIT_DB =
+                "--> [Lifecycle] Application Started: initializing DB...";
+
+            public const string APP_STOPPING_GRACEFUL =
+                "--> [Lifecycle] Graceful Shutdown: Server is shutting down";
+
+            public const string APP_STOPPED_CLEANUP =
+                "--> [Lifecycle] Application Stopped: Server is completely closed, cleaning up...";
+
+            public const string BANNER_API_LOGS =
+                "\n\n\n==============================Application API logs:======================================";
         }
     }
 }

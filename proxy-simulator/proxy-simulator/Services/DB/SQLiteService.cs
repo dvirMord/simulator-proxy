@@ -126,10 +126,23 @@ namespace proxy_simulator.Services
         }
 
         // --------------------private/helper functions------------------
+        // ==================== Device & Channel Operations ====================
+
+        public async Task<int> InsertDeviceAsync(string deviceName)
+        {
+            return await ExecuteAsync(
+                ServicesConstants.SQlite.Queries.INSERT_DEVICE,
+                new { DeviceName = deviceName });
+        }
 
         public async Task<IEnumerable<string>> GetAllDevicesAsync()
         {
             return await QueryAsync<string>(ServicesConstants.SQlite.Queries.GET_ALL_DEVICES);
+        public async Task<int> InsertChannelAsync(string type, int simId, string deviceName)
+        {
+            return await ExecuteAsync(
+                ServicesConstants.SQlite.Queries.INSERT_CHANNEL,
+                new { Type = type, SimId = simId, DeviceName = deviceName });
         }
         // --------------------private/helper functions-------------------
         private string GetTablesQuery() => ServicesConstants.SQlite.Queries.INIT_DB;

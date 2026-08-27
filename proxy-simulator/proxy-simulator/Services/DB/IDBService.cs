@@ -1,5 +1,3 @@
-namespace proxy_simulator.Interfaces;
-
 public interface IDBService
 {
     Task<int> ExecuteAsync(string query, object? parameters = null);
@@ -8,6 +6,8 @@ public interface IDBService
     Task CreateConnectionAndInitialize(CancellationToken cancellationToken = default);
     Task InitializeDatabaseAsync();
     Task CloseConnection();
+    Task<int> InsertDeviceAsync(string deviceName);
+    Task<int> InsertChannelAsync(string type, int simId, string deviceName);
 
     Task<IEnumerable<string>> GetAllDevicesAsync();
 }

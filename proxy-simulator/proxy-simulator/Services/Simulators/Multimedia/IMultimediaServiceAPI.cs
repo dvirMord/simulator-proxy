@@ -4,7 +4,7 @@ namespace proxy_simulator.Interfaces
 {
     public interface IMultimediaServiceAPI
     {
-        Task<bool> UploadFileAsync(Stream fileStream, string fileName, CancellationToken cancellationToken = default);
+        Task<int> UploadFileAsync(Stream fileStream, string fileName, CancellationToken cancellationToken = default);
         Task<bool> DeleteFileAsync(MultimediaApiDTO.DeleteFileDTO dto, CancellationToken cancellationToken = default);
         Task<bool> StartStreamAsync(MultimediaApiDTO.StartStreamDTO dto, CancellationToken cancellationToken = default);
         Task<bool> StopStreamAsync(MultimediaApiDTO.StopStreamDTO dto, CancellationToken cancellationToken = default);

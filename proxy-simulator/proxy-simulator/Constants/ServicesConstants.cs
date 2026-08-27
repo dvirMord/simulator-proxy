@@ -1,4 +1,4 @@
-using Microsoft.VisualBasic;
+using proxy_simulator.DTOs;
 
 namespace proxy_simulator.Constants
 {
@@ -9,6 +9,7 @@ namespace proxy_simulator.Constants
             public static class Settings
             {
                 public const string APP_SETTING_KEY = "SQLiteDbPath";
+               
             }
             public static class ChannelType
             {
@@ -49,12 +50,12 @@ namespace proxy_simulator.Constants
             }
         }
 
-        public static class Telemetry 
+        public static class Telemetry
         {
             public const string FILE_FORM = "application/octet-stream";
         }
 
-        public static class Program 
+        public static class Program
         {
             public static class Swagger
             {
