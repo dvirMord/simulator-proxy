@@ -3,14 +3,22 @@ using proxy_simulator.Config;
 using proxy_simulator.Services;
 using proxy_simulator.Constants;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 AppConfig.Configuration = builder.Configuration;
 
 //============== Services Configuration ==============
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddSingleton<IDBService, SQLiteService>();
+builder.Services.AddSingleton<IDeviceService, DeviceService>();
+builder.Services.AddHttpClient<IMultimediaServiceAPI, MultimediaServiceAPI>( client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5000/");   
+});
 
 var app = builder.Build();
 
@@ -42,10 +50,14 @@ lifetime.ApplicationStopped.Register(() =>
 //============== END-Application Lifecycle Events-END ==============
 
 
-//============== Middleware Pipeline ==============
+//============== Middleware and swagger Pipeline ==============
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(c => 
+    { 
+        c.SwaggerEndpoint(ServicesConstants.Program.Swagger.SWAGGER_URL, ServicesConstants.Program.Swagger.SWAGGER_NAME); 
+    });
 }
 
 app.MapControllers();
