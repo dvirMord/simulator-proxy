@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using System.Text.Json;
-
+using proxy_simulator.Constants;
 namespace proxy_simulator.Services;
 public class GlobalExceptionHandler : IExceptionHandler
 {
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         _logger.LogError(
             exception,
-            "Unhandled exception. Path: {Path}",
+            ServicesConstants.ExceptionFilter.UNKNOWED_EXCEPTION,
             httpContext.Request.Path);
 
         httpContext.Response.StatusCode = statusCode;

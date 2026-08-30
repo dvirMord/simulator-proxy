@@ -12,5 +12,11 @@
                 public const string STOPED_LOG = "--> [Lifecycle] Application Stopped: Server is completely closed, cleaning up...";
             }
         }
+
+        public static class ServicesIp
+        {
+            public const string MULTEMEDIA = "http://localhost:5002/";
+            public const string TELEMETRY = "http://localhost:8000/";
+        }
     }
 }

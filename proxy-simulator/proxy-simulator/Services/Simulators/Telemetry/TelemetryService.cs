@@ -30,7 +30,7 @@ namespace proxy_simulator.Services
                 using var content = new MultipartFormDataContent();
                 using var streamContent = new StreamContent(fileStream);
                 streamContent.Headers.ContentType = new MediaTypeHeaderValue(ServicesConstants.Telemetry.FILE_FORM);
-                content.Add(streamContent, "file", fileName);
+                content.Add(streamContent, ServicesConstants.Multemedia.HTTP_FILE_HEADER_NAME, fileName);
 
                 var response = await _httpClient.PostAsync(ServiceApi.FILES_API, content, cancellationToken);
                 var error = await response.Content.ReadAsStringAsync(cancellationToken);

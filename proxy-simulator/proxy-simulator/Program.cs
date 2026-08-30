@@ -22,12 +22,12 @@ builder.Services.AddSingleton<IDeviceService, DeviceService>();
 builder.Services.AddHttpClient<IMultimediaServiceAPI, MultimediaServiceAPI>
 (MultimediaSimulator =>
 {
-    MultimediaSimulator.BaseAddress = new Uri("http://localhost:5002/");   
+    MultimediaSimulator.BaseAddress = new Uri(ProgramConstants.ServicesIp.MULTEMEDIA);   
 });
 builder.Services.AddHttpClient<ITelemetryServiceAPI, TelemetryServiceAPI>
 (TelemetrySimulator =>
 {
-    TelemetrySimulator.BaseAddress = new Uri("http://localhost:8000/");
+    TelemetrySimulator.BaseAddress = new Uri(ProgramConstants.ServicesIp.TELEMETRY);
 });
 
 var app = builder.Build();
