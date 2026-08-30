@@ -1,7 +1,37 @@
-﻿namespace proxy_simulator.Constants
+namespace proxy_simulator.Constants
 {
     public static class ServicesLogs
     {
+        public static class Device
+        {
+            // ==================== Default Files / Configs ====================
+            public const string DEFAULT_TELEMETRY_STREAM_FILE = "truck_decoded.txt";
+
+            // ==================== Exceptions ====================
+            public const string EXC_REMOVE_DEVICE_FAILED =
+                "Failed to remove device '{0}' from one or more services.";
+
+            public const string EXC_START_CHANNELS_FAILED =
+                "Failed to start channels for device '{0}'.";
+
+            public const string EXC_STOP_CHANNELS_FAILED =
+                "Failed to stop channels for device '{0}'.";
+
+            // ==================== Logs ====================
+            public const string START_ALL_DEVICES_CHANNELS_ACTIVATED =
+                "Received request to start all device channels.";
+
+            public const string STOP_ALL_DEVICES_CHANNELS_ACTIVATED =
+                "Received request to stop all device channels.";
+
+            // ==================== Messages ====================
+            public const string MSG_START_ALL_DEVICES_SUCCESS =
+                "All device channels have been started.";
+
+            public const string MSG_STOP_ALL_DEVICES_SUCCESS =
+                "All device channels have been stopped.";
+        }
+
         public static class Multimedia
         {
             // Upload File

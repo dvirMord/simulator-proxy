@@ -8,6 +8,10 @@ namespace proxy_simulator.Interfaces
         public Task<bool> RemoveDevice(DevicesDTOs.RemoveDevice requestDto);
         public Task<bool> StartDeviceChanneles(DevicesDTOs.StartDeviceChanneles requestDto);
         public Task<bool> StopDeviceChanneles(DevicesDTOs.StopDeviceChanneles requestDto);
-        
+
+
+        Task<bool> StartAllDevicesChannelsAsync();
+        Task<bool> StopAllDevicesChannelsAsync();
+        Task<IEnumerable<string>> GetAllDevicesAsync();
     }
 }

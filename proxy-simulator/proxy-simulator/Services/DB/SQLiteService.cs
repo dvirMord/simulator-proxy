@@ -125,31 +125,13 @@ namespace proxy_simulator.Services
             this._logger.LogInformation(ServicesLogs.SQLite.DB_DISPOSED);
         }
 
-        // --------------------private/helper functions-------------------
-        private string GetTablesQuery()
+        // --------------------private/helper functions------------------
+
+        public async Task<IEnumerable<string>> GetAllDevicesAsync()
         {
-            const string initScript = @"
-                PRAGMA journal_mode = WAL;
-                PRAGMA foreign_keys = ON;
-
-                CREATE TABLE IF NOT EXISTS Devices (
-                    Name TEXT PRIMARY KEY
-                );
-
-                CREATE TABLE IF NOT EXISTS Channels (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Type TEXT NOT NULL,
-                    SimId INTEGER NOT NULL,
-                    DeviceName TEXT NOT NULL,
-
-                    CONSTRAINT FK_Channels_Devices FOREIGN KEY (DeviceName) 
-                        REFERENCES Devices(Name) ON DELETE CASCADE
-                );
-
-                CREATE INDEX IF NOT EXISTS IX_Channels_DeviceName ON Channels (DeviceName);
-            ";
-
-            return initScript;
+            return await QueryAsync<string>(ServicesConstants.SQlite.Queries.GET_ALL_DEVICES);
         }
+        // --------------------private/helper functions-------------------
+        private string GetTablesQuery() => ServicesConstants.SQlite.Queries.INIT_DB;
     }
 }

@@ -7,15 +7,18 @@ namespace proxy_simulator.Services
     {
         //==================Simulators Services=========================
         private readonly IMultimediaServiceAPI _multimediaServiceAPI;
+        private readonly IDBService _dBService;
         
         //=========================END==================================
 
         private readonly ILogger<DeviceService> _logger;
 
-        public DeviceService(ILogger<DeviceService> looger, IMultimediaServiceAPI multimediaServiceAPI)
+        public DeviceService(ILogger<DeviceService> looger, IMultimediaServiceAPI multimediaServiceAPI,
+            IDBService dBService)
         {
             this._multimediaServiceAPI = multimediaServiceAPI;
             this._logger = looger;
+            this._dBService = dBService;
         }
         
         //=================inhrted functions=========================================================================
@@ -35,8 +38,45 @@ namespace proxy_simulator.Services
             return true;
         }
 
+        public async Task<IEnumerable<string>> GetAllDevicesAsync()
+        {
+            return await this._dBService.GetAllDevicesAsync();
+        }
+
         public async Task<bool> StopDeviceChanneles(DevicesDTOs.StopDeviceChanneles requestDto)
         { 
+            return true;
+        }
+
+        public async Task<bool> StartAllDevicesChannelsAsync()
+        {
+            IEnumerable<string> devices = await this._dBService.GetAllDevicesAsync();
+            if (devices == null || !devices.Any())
+            {
+                return false;
+            }
+
+            foreach (string deviceName in devices)
+            {
+                await StartDeviceChanneles(new DevicesDTOs.StartDeviceChanneles { deviceName = deviceName });
+            }
+
+            return true;
+        }
+
+        public async Task<bool> StopAllDevicesChannelsAsync()
+        {
+            IEnumerable<string> devices = await this._dBService.GetAllDevicesAsync();
+            if (devices == null || !devices.Any())
+            {
+                return false;
+            }
+
+            foreach (string deviceName in devices)
+            {
+                await StopDeviceChanneles(new DevicesDTOs.StopDeviceChanneles { deviceName = deviceName });
+            }
+
             return true;
         }
     }

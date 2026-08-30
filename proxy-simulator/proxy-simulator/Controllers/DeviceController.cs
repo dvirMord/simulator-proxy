@@ -42,7 +42,8 @@ namespace proxy_simulator.Controllers
         public async Task<IActionResult> GetAllDevices()
         {
             _logger.LogInformation(ControllersLogs.Device.GET_ALL_DEVICES_ACTIVATED);
-            return Ok(new { msg = true });
+            IEnumerable<string> devices = await this._deviceService.GetAllDevicesAsync();
+            return Ok(new { msg = true, Devices = devices});
         }
 
         //==============================Channels=============================================================
@@ -65,17 +66,49 @@ namespace proxy_simulator.Controllers
         }
 
         [HttpPost("Devices/StartAll")]
-        public async Task<IActionResult> StartAllDevicesChanneles()
+        public async Task<IActionResult> StartAllDevicesChannels()
         {
             _logger.LogInformation(ControllersLogs.Device.START_ALL_DEVICES_CHANNELS_ACTIVATED);
-            return Ok(new { success = true });
+            try
+            {
+                bool result = await _deviceService.StartAllDevicesChannelsAsync();
+                return Ok(new
+                {
+                    success = result,
+                    message = ServicesLogs.Device.MSG_START_ALL_DEVICES_SUCCESS
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
         }
 
         [HttpPost("Devices/StopAll")]
-        public async Task<IActionResult> StopAllDevicesChanneles()
+        public async Task<IActionResult> StopAllDevicesChannels()
         {
             _logger.LogInformation(ControllersLogs.Device.STOP_ALL_DEVICES_CHANNELS_ACTIVATED);
-            return Ok(new { success = true });
+            try
+            {
+                bool result = await _deviceService.StopAllDevicesChannelsAsync();
+                return Ok(new
+                {
+                    success = result,
+                    message = ServicesLogs.Device.MSG_STOP_ALL_DEVICES_SUCCESS
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
         }
         //====================================END============================================================
     }
