@@ -138,6 +138,7 @@ namespace proxy_simulator.Services
         public async Task<IEnumerable<string>> GetAllDevicesAsync()
         {
             return await QueryAsync<string>(ServicesConstants.SQlite.Queries.GET_ALL_DEVICES);
+        }
         public async Task<int> InsertChannelAsync(string type, int simId, string deviceName)
         {
             return await ExecuteAsync(

@@ -13,7 +13,6 @@ namespace proxy_simulator.Services
         private readonly ITelemetryServiceAPI _telemetryServiceAPI;
         private readonly IDBService _dBService;
         private readonly ILogger<DeviceService> _logger;
-        private readonly IDBService _dBService;
         
         //=========================END==================================
 
