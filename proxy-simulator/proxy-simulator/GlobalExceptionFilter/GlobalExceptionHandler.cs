@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Diagnostics;
 using System.Text.Json;
 using proxy_simulator.Constants;
 namespace proxy_simulator.Services;

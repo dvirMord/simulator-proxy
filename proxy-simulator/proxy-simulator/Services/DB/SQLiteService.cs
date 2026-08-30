@@ -125,7 +125,6 @@ namespace proxy_simulator.Services
             this._logger.LogInformation(ServicesLogs.SQLite.DB_DISPOSED);
         }
 
-        // --------------------private/helper functions------------------
         // ==================== Device & Channel Operations ====================
 
         public async Task<int> InsertDeviceAsync(string deviceName)
@@ -135,15 +134,16 @@ namespace proxy_simulator.Services
                 new { DeviceName = deviceName });
         }
 
-        public async Task<IEnumerable<string>> GetAllDevicesAsync()
-        {
-            return await QueryAsync<string>(ServicesConstants.SQlite.Queries.GET_ALL_DEVICES);
-        }
         public async Task<int> InsertChannelAsync(string type, int simId, string deviceName)
         {
             return await ExecuteAsync(
                 ServicesConstants.SQlite.Queries.INSERT_CHANNEL,
                 new { Type = type, SimId = simId, DeviceName = deviceName });
+        }
+
+        public async Task<IEnumerable<string>> GetAllDevicesAsync()
+        {
+            return await QueryAsync<string>(ServicesConstants.SQlite.Queries.GET_ALL_DEVICES);
         }
         // --------------------private/helper functions-------------------
         private string GetTablesQuery() => ServicesConstants.SQlite.Queries.INIT_DB;

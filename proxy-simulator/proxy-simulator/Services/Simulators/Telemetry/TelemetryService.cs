@@ -1,6 +1,8 @@
-﻿using System.Net.Http.Headers;
 using proxy_simulator.Constants;
 using proxy_simulator.Interfaces;
+using proxy_simulator.ROs;
+using System.Net.Http.Headers;
+using System.Text.Json;
 using static proxy_simulator.DTOs.TelemetryApiDTO;
 
 namespace proxy_simulator.Services
@@ -23,7 +25,7 @@ namespace proxy_simulator.Services
             _logger = logger;
         }
 
-        public async Task<bool> UploadKlvFileAsync(Stream fileStream, string fileName, CancellationToken cancellationToken = default)
+        public async Task<int> UploadKlvFileAsync(Stream fileStream, string fileName, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -33,16 +35,19 @@ namespace proxy_simulator.Services
                 content.Add(streamContent, ServicesConstants.Multemedia.HTTP_FILE_HEADER_NAME, fileName);
 
                 var response = await _httpClient.PostAsync(ServiceApi.FILES_API, content, cancellationToken);
-                var error = await response.Content.ReadAsStringAsync(cancellationToken);
+                var serverResponse = await response.Content.ReadAsStringAsync(cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    _logger.LogWarning(ServicesLogs.Telemetry.UPLOAD_KLV_FAILED, fileName, response.StatusCode, error);
-                    throw new HttpRequestException(string.Format(ServicesLogs.Telemetry.EXC_UPLOAD_KLV_FAILED, fileName, response.StatusCode, error), null, response.StatusCode);
+                    _logger.LogWarning(ServicesLogs.Telemetry.UPLOAD_KLV_FAILED, fileName, response.StatusCode, serverResponse);
+                    throw new HttpRequestException(string.Format(ServicesLogs.Telemetry.EXC_UPLOAD_KLV_FAILED, fileName, response.StatusCode, serverResponse), null, response.StatusCode);
                 }
+                var serverRo = JsonSerializer.Deserialize<SimulatorsRos.Telemetry.UploadFileResponse>(serverResponse);
+                if (serverRo is null || !serverRo.Success)
+                    throw new InvalidOperationException(string.Format(ServicesLogs.Telemetry.EXC_UPLOAD_KLV_FAILED, fileName, response.StatusCode, serverResponse));
 
                 _logger.LogInformation(ServicesLogs.Telemetry.UPLOAD_KLV_SUCCESS, fileName);
-                return true;
+                return serverRo.DecodedId;
             }
             catch (HttpRequestException ex)
             {

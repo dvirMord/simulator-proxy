@@ -62,6 +62,7 @@ namespace proxy_simulator.Constants
 
         public static class Program
         {
+            public const string FILE_FORM = "application/octet-stream";
             public static class Swagger
             {
                 public const string SWAGGER_URL = "/swagger/v1/swagger.json";

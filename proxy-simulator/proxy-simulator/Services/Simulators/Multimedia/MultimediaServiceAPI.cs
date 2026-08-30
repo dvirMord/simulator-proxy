@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Json;
+using System.Net.Http.Json;
 using System.Text.Json;
 using proxy_simulator.Constants;
 using proxy_simulator.DTOs;
