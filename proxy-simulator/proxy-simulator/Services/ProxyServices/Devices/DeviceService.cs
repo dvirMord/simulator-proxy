@@ -3,6 +3,7 @@ using proxy_simulator.DTOs;
 using proxy_simulator.Interfaces;
 using static proxy_simulator.Constants.ServicesConstants.SQlite;
 using static proxy_simulator.Constants.ServicesConstants.SQlite.ChannelType;
+using static proxy_simulator.DTOs.DevicesDTOs;
 
 namespace proxy_simulator.Services
 {
@@ -36,39 +37,67 @@ namespace proxy_simulator.Services
 
             await this._dBService.InsertDeviceAsync(requestDto.DeviceName);
 
-            int MultimediaSoureFileId = await _multimediaServiceAPI.UploadFileAsync(
+            int multimediaSourceFileId = await _multimediaServiceAPI.UploadFileAsync(
                 multimediaStream,
                 requestDto.MultimediaFile.FileName
             );
 
-            await this._dBService.InsertChannelAsync(ChannelType.Multimedia, MultimediaSoureFileId, requestDto.DeviceName);
+            await this._dBService.InsertChannelAsync(ChannelType.Multimedia, multimediaSourceFileId, requestDto.DeviceName);
 
-            int TelemetrySoureFileId = await _telemetryServiceAPI.UploadKlvFileAsync(
+            int telemetrySourceFileId = await _telemetryServiceAPI.UploadKlvFileAsync(
                 telemetryStream,
                 requestDto.TelemetryFile.FileName
             );
-            await this._dBService.InsertChannelAsync(ChannelType.Telemetry, TelemetrySoureFileId, requestDto.DeviceName);
+            await this._dBService.InsertChannelAsync(ChannelType.Telemetry, telemetrySourceFileId, requestDto.DeviceName);
+
             return true;
         }
 
         public async Task<bool> RemoveDevice(DevicesDTOs.RemoveDevice requestDto)
         {
-            var multimediaDto = new MultimediaApiDTO.DeleteFileDTO
+            IEnumerable<ChannelSimInfo> deviceChannels = await this._dBService.GetChannelSimsByDeviceNameAsync(requestDto.deviceName);
+
+            if (deviceChannels == null || !deviceChannels.Any())
             {
-                FileName = requestDto.deviceName
-            };
+                return false;
+            }
 
-            var telemetryDto = new TelemetryApiDTO.DeleteFileDTO
+            foreach (ChannelSimInfo channel in deviceChannels)
             {
-                FileName = requestDto.deviceName
-            };
+                switch (channel.Type)
+                {
+                    case ChannelType.Telemetry:
+                        bool telemetryDeleted = await this._telemetryServiceAPI.DeleteKlvFileAsync(
+                            new DTOs.TelemetryApiDTO.DeleteFileDTO { SimId = channel.SimId }
+                        );
+                        if (!telemetryDeleted)
+                        {
+                            throw new InvalidOperationException(
+                                string.Format(ServicesLogs.Device.EXC_REMOVE_DEVICE_FAILED, requestDto.deviceName)
+                            );
+                        }
+                        break;
 
-            var deleteMultimediaTask = _multimediaServiceAPI.DeleteFileAsync(multimediaDto);
-            var deleteTelemetryTask = _telemetryServiceAPI.DeleteKlvFileAsync(telemetryDto);
+                    case ChannelType.Multimedia:
+                        bool multimediaDeleted = await this._multimediaServiceAPI.DeleteFileAsync(
+                            new DTOs.MultimediaApiDTO.DeleteFileDTO { SimId = channel.SimId }
+                        );
+                        if (!multimediaDeleted)
+                        {
+                            throw new InvalidOperationException(
+                                string.Format(ServicesLogs.Device.EXC_REMOVE_DEVICE_FAILED, requestDto.deviceName)
+                            );
+                        }
+                        break;
 
-            var results = await Task.WhenAll(deleteMultimediaTask, deleteTelemetryTask);
-
-            if (!results[0] || !results[1])
+                    default:
+                        this._logger.LogWarning(ServicesLogs.Device.UNKNOWN_CHANNEL_TYPE,
+                            channel.Type, channel.SimId, requestDto.deviceName);
+                        break;
+                }
+            }
+            bool isDeletedFromDb = await this._dBService.DeleteDeviceAsync(requestDto.deviceName);
+            if (!isDeletedFromDb)
             {
                 throw new InvalidOperationException(
                     string.Format(ServicesLogs.Device.EXC_REMOVE_DEVICE_FAILED, requestDto.deviceName)
@@ -80,31 +109,34 @@ namespace proxy_simulator.Services
 
         public async Task<bool> StartDeviceChanneles(DevicesDTOs.StartDeviceChanneles requestDto)
         {
-            var multimediaDto = new MultimediaApiDTO.StartStreamDTO
+            IEnumerable<ChannelSimInfo> deviceChannels = await this._dBService.GetChannelSimsByDeviceNameAsync(requestDto.deviceName);
+
+            if (deviceChannels == null || !deviceChannels.Any())
             {
-                FileName = requestDto.deviceName,
-                SourceFileId = 1,
-                Type = MultimediaApiDTO.StreamType.Video
-            };
+                return false;
+            }
 
-            var telemetryDto = new TelemetryApiDTO.StartStreamDTO
+            foreach (ChannelSimInfo channel in deviceChannels)
             {
-                FileName = ServicesLogs.Device.DEFAULT_TELEMETRY_STREAM_FILE
-            };
+                switch (channel.Type)
+                {
+                    case ChannelType.Telemetry:
+                        await this._telemetryServiceAPI.StartStreamAsync(
+                            new DTOs.TelemetryApiDTO.StartStreamDTO { SimId = channel.SimId }
+                        );
+                        break;
 
-            var startMultimediaTask = _multimediaServiceAPI.StartStreamAsync(multimediaDto);
-            var startTelemetryTask = _telemetryServiceAPI.StartStreamAsync(telemetryDto);
+                    case ChannelType.Multimedia:
+                        await this._multimediaServiceAPI.StartStreamAsync(
+                            new DTOs.MultimediaApiDTO.StartStreamDTO { SimId = channel.SimId }
+                        );
+                        break;
 
-            await Task.WhenAll(startMultimediaTask, startTelemetryTask);
-
-            bool isMultimediaOk = await startMultimediaTask;
-            var telemetryResponse = await startTelemetryTask;
-
-            if (!isMultimediaOk || telemetryResponse is null || !telemetryResponse.Success)
-            {
-                throw new InvalidOperationException(
-                    string.Format(ServicesLogs.Device.EXC_START_CHANNELS_FAILED, requestDto.deviceName)
-                );
+                    default:
+                        this._logger.LogWarning(ServicesLogs.Device.UNKNOWN_CHANNEL_TYPE,
+                            channel.Type, channel.SimId, requestDto.deviceName);
+                        break;
+                }
             }
 
             return true;
@@ -117,29 +149,34 @@ namespace proxy_simulator.Services
 
         public async Task<bool> StopDeviceChanneles(DevicesDTOs.StopDeviceChanneles requestDto)
         {
-            var multimediaDto = new MultimediaApiDTO.StopStreamDTO
+            IEnumerable<ChannelSimInfo> deviceChannels = await this._dBService.GetChannelSimsByDeviceNameAsync(requestDto.deviceName);
+
+            if (deviceChannels == null || !deviceChannels.Any())
             {
-                StreamName = requestDto.deviceName
-            };
+                return false;
+            }
 
-            var telemetryDto = new TelemetryApiDTO.StopStreamDTO
+            foreach (ChannelSimInfo channel in deviceChannels)
             {
-                FileName = requestDto.deviceName
-            };
+                switch (channel.Type)
+                {
+                    case ChannelType.Telemetry:
+                        await this._telemetryServiceAPI.StopStreamAsync(
+                            new DTOs.TelemetryApiDTO.StopStreamDTO { SimId = channel.SimId }
+                        );
+                        break;
 
-            var stopMultimediaTask = _multimediaServiceAPI.StopStreamAsync(multimediaDto);
-            var stopTelemetryTask = _telemetryServiceAPI.StopStreamAsync(telemetryDto);
+                    case ChannelType.Multimedia:
+                        await this._multimediaServiceAPI.StopStreamAsync(
+                            new DTOs.MultimediaApiDTO.StopStreamDTO { SimId = channel.SimId }
+                        );
+                        break;
 
-            await Task.WhenAll(stopMultimediaTask, stopTelemetryTask);
-
-            bool isMultimediaOk = await stopMultimediaTask;
-            var telemetryResponse = await stopTelemetryTask;
-
-            if (!isMultimediaOk || telemetryResponse is null || !telemetryResponse.Success)
-            {
-                throw new InvalidOperationException(
-                    string.Format(ServicesLogs.Device.EXC_STOP_CHANNELS_FAILED, requestDto.deviceName)
-                );
+                    default:
+                        this._logger.LogWarning(ServicesLogs.Device.UNKNOWN_CHANNEL_TYPE,
+                            channel.Type, channel.SimId, requestDto.deviceName);
+                        break;
+                }
             }
 
             return true;

@@ -1,8 +1,9 @@
 using Dapper;
 using Microsoft.Data.Sqlite;
-using proxy_simulator.Interfaces;
 using proxy_simulator.Config;
 using proxy_simulator.Constants;
+using proxy_simulator.Interfaces;
+using static proxy_simulator.DTOs.DevicesDTOs;
 
 namespace proxy_simulator.Services
 {
@@ -126,7 +127,12 @@ namespace proxy_simulator.Services
         }
 
         // ==================== Device & Channel Operations ====================
-
+        public async Task<IEnumerable<ChannelSimInfo>> GetChannelSimsByDeviceNameAsync(string deviceName)
+        {
+            return await QueryAsync<ChannelSimInfo>(
+                ServicesConstants.SQlite.Queries.GET_CHANNELS_BY_DEVICE_NAME,
+                new { DeviceName = deviceName });
+        }
         public async Task<int> InsertDeviceAsync(string deviceName)
         {
             return await ExecuteAsync(
@@ -139,6 +145,20 @@ namespace proxy_simulator.Services
             return await ExecuteAsync(
                 ServicesConstants.SQlite.Queries.INSERT_CHANNEL,
                 new { Type = type, SimId = simId, DeviceName = deviceName });
+        }
+
+        public async Task<bool> DeleteDeviceAsync(string deviceName)
+        {
+            await ExecuteAsync(
+                ServicesConstants.SQlite.Queries.DELETE_CHANNELS_BY_DEVICE_NAME,
+                new { DeviceName = deviceName }
+            );
+            int affectedRows = await ExecuteAsync(
+                ServicesConstants.SQlite.Queries.DELETE_DEVICE_BY_NAME,
+                new { DeviceName = deviceName }
+            );
+
+            return affectedRows > 0;
         }
 
         public async Task<IEnumerable<string>> GetAllDevicesAsync()

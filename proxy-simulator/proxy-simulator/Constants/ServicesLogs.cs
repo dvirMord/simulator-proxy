@@ -30,6 +30,9 @@ namespace proxy_simulator.Constants
 
             public const string MSG_STOP_ALL_DEVICES_SUCCESS =
                 "All device channels have been stopped.";
+
+            public const string UNKNOWN_CHANNEL_TYPE =
+                "Unknown channel type received: {ChannelType} (SimId: {SimId}) for device {DeviceName}";
         }
 
         public static class Multimedia
@@ -49,30 +52,26 @@ namespace proxy_simulator.Constants
             public const string EXC_UPLOAD_FILE_SERVER_REJECTED =
                 "Server rejected upload for file '{0}'. Message: {1}";
 
-
             // Delete File
             public const string EXC_DELETE_FILE_FAILED =
-                "Failed to delete file '{0}'. StatusCode: {1}. ServerResponse: {2}";
+                "Failed to delete file (SimId: {0}). StatusCode: {1}. ServerResponse: {2}";
 
             public const string EXC_DELETE_FILE_ERROR =
-                "An error occurred while deleting file '{0}'.";
-
+                "An error occurred while deleting file (SimId: {0}).";
 
             // Start Stream
             public const string EXC_START_STREAM_FAILED =
-                "Failed to start stream for file '{0}'. StatusCode: {1}. ServerResponse: {2}";
+                "Failed to start stream (SimId: {0}). StatusCode: {1}. ServerResponse: {2}";
 
             public const string EXC_START_STREAM_ERROR =
-                "An error occurred while starting stream for file '{0}'.";
-
+                "An error occurred while starting stream (SimId: {0}).";
 
             // Stop Stream
             public const string EXC_STOP_STREAM_FAILED =
-                "Failed to stop stream '{0}'. StatusCode: {1}. ServerResponse: {2}";
+                "Failed to stop stream (SimId: {0}). StatusCode: {1}. ServerResponse: {2}";
 
             public const string EXC_STOP_STREAM_ERROR =
-                "An error occurred while stopping stream '{0}'.";
-
+                "An error occurred while stopping stream (SimId: {0}).";
 
             // ==================== Logs ====================
 
@@ -81,64 +80,64 @@ namespace proxy_simulator.Constants
                 "[MultimediaService] File '{FileName}' uploaded successfully.";
 
             public const string UPLOAD_FILE_FAILED =
-                "[MultimediaService] Failed to upload file '{FileName}'.[{StatusCode}]:{ServerError}";
+                "[MultimediaService] Failed to upload file '{FileName}'. [{StatusCode}]: {ServerError}";
 
             public const string UPLOAD_FILE_ERROR =
                 "[MultimediaService] Error uploading file '{FileName}'.";
 
-
             // Delete File
             public const string DELETE_FILE_SUCCESS =
-                "[MultimediaService] File '{FileName}' deleted successfully.";
+                "[MultimediaService] File deleted successfully (SimId: {SimId}).";
 
             public const string DELETE_FILE_FAILED =
-                "[MultimediaService] Failed to delete file '{FileName}'. StatusCode: {StatusCode}";
+                "[MultimediaService] Failed to delete file (SimId: {SimId}). StatusCode: {StatusCode}";
 
             public const string DELETE_FILE_ERROR =
-                "[MultimediaService] Error deleting file '{FileName}'.";
-
+                "[MultimediaService] Error deleting file (SimId: {SimId}).";
 
             // Start Stream
             public const string START_STREAM_SUCCESS =
-                "[MultimediaService] Stream started successfully for file '{FileName}' (SourceFileId: {SourceFileId}).";
+                "[MultimediaService] Stream started successfully (SimId: {SimId}).";
 
             public const string START_STREAM_FAILED =
-                "[MultimediaService] Failed to start stream for file '{FileName}'. StatusCode: {StatusCode}, Error from server: {ServerError}";
+                "[MultimediaService] Failed to start stream (SimId: {SimId}). StatusCode: {StatusCode}, Error: {ServerError}";
 
             public const string START_STREAM_ERROR =
-                "[MultimediaService] Error starting stream for file '{FileName}'.";
-
+                "[MultimediaService] Error starting stream (SimId: {SimId}).";
 
             // Stop Stream
             public const string STOP_STREAM_SUCCESS =
-                "[MultimediaService] Stream '{StreamName}' stopped successfully.";
+                "[MultimediaService] Stream stopped successfully (SimId: {SimId}).";
 
             public const string STOP_STREAM_FAILED =
-                "[MultimediaService] Failed to stop stream '{StreamName}'. StatusCode: {StatusCode}, Error from server: {ServerError}";
+                "[MultimediaService] Failed to stop stream (SimId: {SimId}). StatusCode: {StatusCode}, Error: {ServerError}";
 
             public const string STOP_STREAM_ERROR =
-                "[MultimediaService] Error stopping stream '{StreamName}'.";
+                "[MultimediaService] Error stopping stream (SimId: {SimId}).";
         }
 
         public static class Telemetry
         {
+            // ==================== Exceptions ====================
             public const string EXC_UPLOAD_KLV_FAILED =
                 "Failed to upload KLV file '{0}'. StatusCode: {1}. ServerResponse: {2}";
 
             public const string EXC_DELETE_KLV_FAILED =
-                "Failed to delete KLV file '{0}'. StatusCode: {1}. ServerResponse: {2}";
+                "Failed to delete KLV stream for SimId '{0}'. StatusCode: {1}. ServerResponse: {2}";
 
             public const string EXC_START_STREAM_FAILED =
-                "Failed to start telemetry stream for '{0}'. StatusCode: {1}. ServerResponse: {2}";
+                "Failed to start telemetry stream for SimId '{0}'. StatusCode: {1}. ServerResponse: {2}";
 
             public const string EXC_STOP_STREAM_FAILED =
-                "Failed to stop telemetry stream for '{0}'. StatusCode: {1}. ServerResponse: {2}";
+                "Failed to stop telemetry stream for SimId '{0}'. StatusCode: {1}. ServerResponse: {2}";
 
             public const string EXC_START_STREAM_INVALID_RESPONSE =
-                "Invalid response received while starting telemetry stream for '{0}'.";
+                "Invalid response received while starting telemetry stream for SimId '{0}'.";
 
             public const string EXC_STOP_STREAM_INVALID_RESPONSE =
-                "Invalid response received while stopping telemetry stream for '{0}'.";
+                "Invalid response received while stopping telemetry stream for SimId '{0}'.";
+
+            // ==================== Logs ====================
 
             // Upload
             public const string UPLOAD_KLV_SUCCESS =
@@ -152,33 +151,33 @@ namespace proxy_simulator.Constants
 
             // Delete
             public const string DELETE_KLV_SUCCESS =
-                "[TelemetryService] KLV File '{FileName}' deleted successfully.";
+                "[TelemetryService] KLV File deleted successfully (SimId: {SimId}).";
 
             public const string DELETE_KLV_FAILED =
-                "[TelemetryService] Failed to delete KLV file '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
+                "[TelemetryService] Failed to delete KLV file (SimId: {SimId}). StatusCode: {StatusCode}, Error: {Error}";
 
             public const string DELETE_KLV_ERROR =
-                "[TelemetryService] Error deleting KLV file '{FileName}'.";
+                "[TelemetryService] Error deleting KLV file (SimId: {SimId}).";
 
             // Start Stream
             public const string START_STREAM_SUCCESS =
-                "[TelemetryService] Telemetry stream started for '{FileName}'. Response: {Message}";
+                "[TelemetryService] Telemetry stream started for SimId {SimId}. Response: {Message}";
 
             public const string START_STREAM_FAILED =
-                "[TelemetryService] Failed to start telemetry stream for '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
+                "[TelemetryService] Failed to start telemetry stream for SimId {SimId}. StatusCode: {StatusCode}, Error: {Error}";
 
             public const string START_STREAM_ERROR =
-                "[TelemetryService] Error starting telemetry stream for '{FileName}'.";
+                "[TelemetryService] Error starting telemetry stream for SimId {SimId}.";
 
             // Stop Stream
             public const string STOP_STREAM_SUCCESS =
-                "[TelemetryService] Telemetry stream stopped for '{FileName}'. Response: {Message}";
+                "[TelemetryService] Telemetry stream stopped for SimId {SimId}. Response: {Message}";
 
             public const string STOP_STREAM_FAILED =
-                "[TelemetryService] Failed to stop telemetry stream for '{FileName}'. StatusCode: {StatusCode}, Error: {Error}";
+                "[TelemetryService] Failed to stop telemetry stream for SimId {SimId}. StatusCode: {StatusCode}, Error: {Error}";
 
             public const string STOP_STREAM_ERROR =
-                "[TelemetryService] Error stopping telemetry stream for '{FileName}'.";
+                "[TelemetryService] Error stopping telemetry stream for SimId {SimId}.";
         }
 
         public static class SQLite

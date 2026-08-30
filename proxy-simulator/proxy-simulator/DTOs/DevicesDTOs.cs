@@ -5,6 +5,12 @@ namespace proxy_simulator.DTOs
 {
     public class DevicesDTOs
     {
+        public class ChannelSimInfo
+        {
+            public string Type { get; set; } = string.Empty;
+            public int SimId { get; set; }
+        }
+
         public sealed class AddDevice
         {
             [Required]
