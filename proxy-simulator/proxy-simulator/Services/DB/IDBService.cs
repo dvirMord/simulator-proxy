@@ -9,5 +9,6 @@ public interface IDBService
     Task CreateConnectionAndInitialize(CancellationToken cancellationToken = default);
     Task InitializeDatabaseAsync();
     Task CloseConnection();
+
     Task<IEnumerable<string>> GetAllDevicesAsync();
 }
