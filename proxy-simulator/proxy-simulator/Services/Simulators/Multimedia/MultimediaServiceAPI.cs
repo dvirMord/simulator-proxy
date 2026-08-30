@@ -1,7 +1,9 @@
 ﻿using System.Net.Http.Json;
+using System.Text.Json;
 using proxy_simulator.Constants;
+using proxy_simulator.DTOs;
 using proxy_simulator.Interfaces;
-using static proxy_simulator.DTOs.MultimediaApiDTO;
+using proxy_simulator.ROs;
 
 namespace proxy_simulator.Services
 {
@@ -17,112 +19,82 @@ namespace proxy_simulator.Services
         private readonly HttpClient _httpClient;
         private readonly ILogger<MultimediaServiceAPI> _logger;
 
-        //================Constructor==========================
         public MultimediaServiceAPI(HttpClient httpClient, ILogger<MultimediaServiceAPI> logger)
         {
             _httpClient = httpClient;
             _logger = logger;
         }
-        //===================END================================
 
-        public async Task<bool> UploadFileAsync(Stream fileStream, string fileName, CancellationToken cancellationToken = default)
+        public async Task<int> UploadFileAsync(Stream fileStream, string fileName, CancellationToken ct = default)
         {
-            try
+            using var content = new MultipartFormDataContent();
+            using var streamContent = new StreamContent(fileStream);
+            content.Add(streamContent, ServicesConstants.Multemedia.HTTP_FILE_HEADER_NAME, fileName);
+
+            var response = await _httpClient.PostAsync(ServiceApi.FILES_API, content, ct);
+            var serverResponse = await response.Content.ReadAsStringAsync(ct);
+
+            if (!response.IsSuccessStatusCode)
             {
-                using var content = new MultipartFormDataContent();
-                using var streamContent = new StreamContent(fileStream);
-                content.Add(streamContent, "file", fileName);
-
-                var response = await _httpClient.PostAsync(ServiceApi.FILES_API, content, cancellationToken);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    var serverError = await response.Content.ReadAsStringAsync();
-                    _logger.LogWarning(ServicesLogs.Multimedia.UPLOAD_FILE_FAILED, fileName, response.StatusCode, serverError);
-                    return false;
-                }
-
-                _logger.LogInformation(ServicesLogs.Multimedia.UPLOAD_FILE_SUCCESS, fileName);
-                return true;
+                _logger.LogWarning(ServicesLogs.Multimedia.UPLOAD_FILE_FAILED, fileName, response.StatusCode, serverResponse);
+                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_UPLOAD_FILE_FAILED, fileName, response.StatusCode, serverResponse), null, response.StatusCode);
             }
-            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
-            {
-                _logger.LogError(ex, ServicesLogs.Multimedia.UPLOAD_FILE_ERROR, fileName);
-                return false;
-            }
+
+            var serverRo = JsonSerializer.Deserialize<SimulatorsRos.Multimedia.UploadFileResponse>(serverResponse);
+            if (serverRo is null)
+                throw new InvalidOperationException(string.Format(ServicesLogs.Multimedia.EXC_UPLOAD_FILE_INVALID_RESPONSE, fileName));
+
+            if (!serverRo.Success)
+                throw new InvalidOperationException(string.Format(ServicesLogs.Multimedia.EXC_UPLOAD_FILE_SERVER_REJECTED, fileName, serverRo.Message));
+
+            _logger.LogInformation(ServicesLogs.Multimedia.UPLOAD_FILE_SUCCESS, fileName);
+            return serverRo.IdInDb;
         }
 
-        public async Task<bool> DeleteFileAsync(DeleteFileDTO dto, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteFileAsync(MultimediaApiDTO.DeleteFileDTO dto, CancellationToken ct = default)
         {
-            try
+            using var request = new HttpRequestMessage(HttpMethod.Delete, ServiceApi.FILES_API) { Content = JsonContent.Create(dto) };
+            var response = await _httpClient.SendAsync(request, ct);
+            var serverResponse = await response.Content.ReadAsStringAsync(ct);
+
+            if (!response.IsSuccessStatusCode)
             {
-                using var request = new HttpRequestMessage(HttpMethod.Delete, ServiceApi.FILES_API)
-                {
-                    Content = JsonContent.Create(dto)
-                };
-
-                var response = await _httpClient.SendAsync(request, cancellationToken);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogWarning(ServicesLogs.Multimedia.DELETE_FILE_FAILED, dto.FileName, response.StatusCode);
-                    return false;
-                }
-
-                _logger.LogInformation(ServicesLogs.Multimedia.DELETE_FILE_SUCCESS, dto.FileName);
-                return true;
+                _logger.LogWarning(ServicesLogs.Multimedia.DELETE_FILE_FAILED, dto.FileName, response.StatusCode);
+                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_DELETE_FILE_FAILED, dto.FileName, response.StatusCode, serverResponse), null, response.StatusCode);
             }
-            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
-            {
-                _logger.LogError(ex, ServicesLogs.Multimedia.DELETE_FILE_ERROR, dto.FileName);
-                return false;
-            }
+
+            _logger.LogInformation(ServicesLogs.Multimedia.DELETE_FILE_SUCCESS, dto.FileName);
+            return true;
         }
 
-        public async Task<bool> StartStreamAsync(StartStreamDTO dto, CancellationToken cancellationToken = default)
+        public async Task<bool> StartStreamAsync(MultimediaApiDTO.StartStreamDTO dto, CancellationToken ct = default)
         {
-            try
-            {
-                var response = await _httpClient.PostAsJsonAsync(ServiceApi.START_STREAM_API, dto, cancellationToken);
+            var response = await _httpClient.PostAsJsonAsync(ServiceApi.START_STREAM_API, dto, ct);
+            var serverResponse = await response.Content.ReadAsStringAsync(ct);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    string serverError = await response.Content.ReadAsStringAsync(cancellationToken);
-                    _logger.LogWarning(ServicesLogs.Multimedia.START_STREAM_FAILED, dto.FileName, response.StatusCode, serverError);
-                    return false;
-                }
-
-                _logger.LogInformation(ServicesLogs.Multimedia.START_STREAM_SUCCESS, dto.FileName, dto.SourceFileId);
-                return true;
-            }
-            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+            if (!response.IsSuccessStatusCode)
             {
-                _logger.LogError(ex, ServicesLogs.Multimedia.START_STREAM_ERROR, dto.FileName);
-                return false;
+                _logger.LogWarning(ServicesLogs.Multimedia.START_STREAM_FAILED, dto.FileName, response.StatusCode, serverResponse);
+                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_START_STREAM_FAILED, dto.FileName, response.StatusCode, serverResponse), null, response.StatusCode);
             }
+
+            _logger.LogInformation(ServicesLogs.Multimedia.START_STREAM_SUCCESS, dto.FileName, dto.SourceFileId);
+            return true;
         }
 
-        public async Task<bool> StopStreamAsync(StopStreamDTO dto, CancellationToken cancellationToken = default)
+        public async Task<bool> StopStreamAsync(MultimediaApiDTO.StopStreamDTO dto, CancellationToken ct = default)
         {
-            try
-            {
-                var response = await _httpClient.PostAsJsonAsync(ServiceApi.STOP_STREAM_API, dto, cancellationToken);
+            var response = await _httpClient.PostAsJsonAsync(ServiceApi.STOP_STREAM_API, dto, ct);
+            var serverResponse = await response.Content.ReadAsStringAsync(ct);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    string serverError = await response.Content.ReadAsStringAsync(cancellationToken);
-                    _logger.LogWarning(ServicesLogs.Multimedia.STOP_STREAM_FAILED, dto.StreamName, response.StatusCode, serverError);
-                    return false;
-                }
-
-                _logger.LogInformation(ServicesLogs.Multimedia.STOP_STREAM_SUCCESS, dto.StreamName);
-                return true;
-            }
-            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+            if (!response.IsSuccessStatusCode)
             {
-                _logger.LogError(ex, ServicesLogs.Multimedia.STOP_STREAM_ERROR, dto.StreamName);
-                return false;
+                _logger.LogWarning(ServicesLogs.Multimedia.STOP_STREAM_FAILED, dto.StreamName, response.StatusCode, serverResponse);
+                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_STOP_STREAM_FAILED, dto.StreamName, response.StatusCode, serverResponse), null, response.StatusCode);
             }
+
+            _logger.LogInformation(ServicesLogs.Multimedia.STOP_STREAM_SUCCESS, dto.StreamName);
+            return true;
         }
     }
 }

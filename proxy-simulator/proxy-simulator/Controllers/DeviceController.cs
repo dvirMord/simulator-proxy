@@ -21,6 +21,7 @@ namespace proxy_simulator.Controllers
 
         //==============================Devices==============================================================
         [HttpPost("Devices")]
+        [DisableRequestSizeLimit]
         public async Task<IActionResult> AddDevice([FromForm] DevicesDTOs.AddDevice requestDto)
         {
             _logger.LogInformation(ControllersLogs.Device.ADD_DEVICE_ACTIVATED,requestDto.TelemetryFile.FileName, requestDto.MultimediaFile.FileName);

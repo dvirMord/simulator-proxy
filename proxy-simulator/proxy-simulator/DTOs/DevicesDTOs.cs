@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace proxy_simulator.DTOs
 {
@@ -6,9 +7,15 @@ namespace proxy_simulator.DTOs
     {
         public sealed class AddDevice
         {
+            [Required]
+            [FromForm(Name = "deviceName")]
+            public string DeviceName { get; init; } = null!;
+
+            [Required]
             [FromForm(Name = "multimediaFile")]
             public IFormFile MultimediaFile { get; init; } = null!;
 
+            [Required]
             [FromForm(Name = "telemetryFile")]
             public IFormFile TelemetryFile { get; init; } = null!;
         }
