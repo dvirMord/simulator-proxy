@@ -27,5 +27,7 @@ namespace proxy_simulator.DTOs
             [JsonPropertyName("simId")]
             public int SimId { get; set; }
         }
+
+        
     }
 }

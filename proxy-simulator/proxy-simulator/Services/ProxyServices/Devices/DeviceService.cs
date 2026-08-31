@@ -107,13 +107,14 @@ namespace proxy_simulator.Services
             return true;
         }
 
-        public async Task<bool> StartDeviceChanneles(DevicesDTOs.StartDeviceChanneles requestDto)
+        public async Task<List<RtspStreamToSimId>> StartDeviceChanneles(DevicesDTOs.StartDeviceChanneles requestDto)
         {
-            IEnumerable<ChannelSimInfo> deviceChannels = await this._dBService.GetChannelSimsByDeviceNameAsync(requestDto.deviceName);
+            var channelToId = new List<RtspStreamToSimId>();
 
+            IEnumerable<ChannelSimInfo> deviceChannels = await this._dBService.GetChannelSimsByDeviceNameAsync(requestDto.deviceName);
             if (deviceChannels == null || !deviceChannels.Any())
             {
-                return false;
+                return channelToId; 
             }
 
             foreach (ChannelSimInfo channel in deviceChannels)
@@ -127,9 +128,15 @@ namespace proxy_simulator.Services
                         break;
 
                     case ChannelType.Multimedia:
-                        await this._multimediaServiceAPI.StartStreamAsync(
+                        string rtspStream = await this._multimediaServiceAPI.StartStreamAsync(
                             new DTOs.MultimediaApiDTO.StartStreamDTO { SimId = channel.SimId }
                         );
+
+                        channelToId.Add(new RtspStreamToSimId
+                        {
+                            SimId = channel.SimId,
+                            rtspStream = rtspStream 
+                        });
                         break;
 
                     default:
@@ -139,7 +146,7 @@ namespace proxy_simulator.Services
                 }
             }
 
-            return true;
+            return channelToId;
         }
 
         public async Task<IEnumerable<string>> GetAllDevicesAsync()
@@ -182,20 +189,30 @@ namespace proxy_simulator.Services
             return true;
         }
 
-        public async Task<bool> StartAllDevicesChannelsAsync()
+        public async Task<List<RtspStreamToSimId>> StartAllDevicesChannelsAsync()
         {
             IEnumerable<string> devices = await this._dBService.GetAllDevicesAsync();
+            List<RtspStreamToSimId> streams = new List<RtspStreamToSimId>();
+
             if (devices == null || !devices.Any())
             {
-                return false;
+                return streams;
             }
 
             foreach (string deviceName in devices)
             {
-                await StartDeviceChanneles(new DevicesDTOs.StartDeviceChanneles { deviceName = deviceName });
+                List<RtspStreamToSimId> deviceStreams = await StartDeviceChanneles(new DevicesDTOs.StartDeviceChanneles
+                {
+                    deviceName = deviceName
+                });
+
+                if (deviceStreams != null && deviceStreams.Count > 0)
+                {
+                    streams.AddRange(deviceStreams);
+                }
             }
 
-            return true;
+            return streams;
         }
 
         public async Task<bool> StopAllDevicesChannelsAsync()

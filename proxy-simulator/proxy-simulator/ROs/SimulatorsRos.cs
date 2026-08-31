@@ -17,6 +17,18 @@ namespace proxy_simulator.ROs
                 [JsonPropertyName("idInDb")]
                 public int IdInDb { get; set; }
             }
+
+            public class StartStreamResponse
+            {
+                [JsonPropertyName("success")]
+                public bool Success { get; set; }
+
+                [JsonPropertyName("message")]
+                public string Message { get; set; } = string.Empty;
+
+                [JsonPropertyName("rtspStream")]
+                public string RtspStream { get; set; } = string.Empty;
+            }
         }
 
         public class Telemetry

@@ -99,12 +99,16 @@ namespace proxy_simulator.Services
             try
             {
                 var response = await _httpClient.PostAsJsonAsync(ServiceApi.START_STREAM_API, dto, cancellationToken);
-                var error = await response.Content.ReadAsStringAsync(cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
                 {
+                    var error = await response.Content.ReadAsStringAsync(cancellationToken);
                     _logger.LogWarning(ServicesLogs.Telemetry.START_STREAM_FAILED, dto.SimId, response.StatusCode, error);
-                    throw new HttpRequestException(string.Format(ServicesLogs.Telemetry.EXC_START_STREAM_FAILED, dto.SimId, response.StatusCode, error), null, response.StatusCode);
+
+                    throw new HttpRequestException(
+                        string.Format(ServicesLogs.Telemetry.EXC_START_STREAM_FAILED, dto.SimId, response.StatusCode, error),
+                        null,
+                        response.StatusCode);
                 }
 
                 var result = await response.Content.ReadFromJsonAsync<StreamResponseDTO>(cancellationToken: cancellationToken)

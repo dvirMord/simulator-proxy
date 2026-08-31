@@ -11,6 +11,12 @@ namespace proxy_simulator.DTOs
             public int SimId { get; set; }
         }
 
+        public class RtspStreamToSimId
+        {
+            public string rtspStream { get; set; } = string.Empty;
+            public int SimId { get; set; }
+        }
+
         public sealed class AddDevice
         {
             [Required]
