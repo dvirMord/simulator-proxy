@@ -54,7 +54,6 @@ namespace proxy_simulator.Controllers
             _logger.LogInformation(ControllersLogs.Device.START_DEVICE_CHANNELS_ACTIVATED, requestDto.deviceName);
 
             var result = await _deviceService.StartDeviceChanneles(requestDto);
-            Console.WriteLine();
             return Ok(new { success = result });
         }
 

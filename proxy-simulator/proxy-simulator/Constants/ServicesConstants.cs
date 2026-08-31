@@ -61,6 +61,8 @@ namespace proxy_simulator.Constants
         public static class Telemetry
         {
             public const string FILE_FORM = "application/octet-stream";
+            public const string SIM_POSITIVE_ERROR =  "SimId must be a positive integer.";
+            public const string SIM_MISSING_ERROR = "SimId is required.";
         }
 
         public static class ExceptionFilter
