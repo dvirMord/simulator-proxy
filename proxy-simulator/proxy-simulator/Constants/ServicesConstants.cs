@@ -47,12 +47,22 @@ namespace proxy_simulator.Constants
                 public const string INSERT_CHANNEL = @"
                     INSERT INTO Channels (Type, SimId, DeviceName) 
                     VALUES (@Type, @SimId, @DeviceName);";
+
+                public const string GET_CHANNELS_BY_DEVICE_NAME = @"
+                    SELECT Type, SimId 
+                    FROM Channels 
+                    WHERE DeviceName = @DeviceName;";
+
+                public const string DELETE_CHANNELS_BY_DEVICE_NAME = "DELETE FROM channels WHERE DeviceName = @DeviceName;";
+                public const string DELETE_DEVICE_BY_NAME = "DELETE FROM devices WHERE name = @DeviceName;";
             }
         }
 
         public static class Telemetry
         {
             public const string FILE_FORM = "application/octet-stream";
+            public const string SIM_POSITIVE_ERROR =  "SimId must be a positive integer.";
+            public const string SIM_MISSING_ERROR = "SimId is required.";   
         }
 
         public static class ExceptionFilter

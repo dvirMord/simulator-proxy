@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using proxy_simulator.Constants;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace proxy_simulator.DTOs
 {
@@ -6,20 +8,26 @@ namespace proxy_simulator.DTOs
     {
         public class DeleteFileDTO
         {
-            [JsonPropertyName("file_name")]
-            public string FileName { get; set; } = string.Empty;
+            [JsonPropertyName("simId")]
+            [Required(ErrorMessage = ServicesConstants.Telemetry.SIM_MISSING_ERROR)]
+            [Range(1, int.MaxValue, ErrorMessage = ServicesConstants.Telemetry.SIM_POSITIVE_ERROR)]
+            public int SimId { get; set; }
         }
 
         public class StartStreamDTO
         {
-            [JsonPropertyName("file_name")]
-            public string FileName { get; set; } = string.Empty;
+            [JsonPropertyName("simId")]
+            [Required(ErrorMessage = ServicesConstants.Telemetry.SIM_MISSING_ERROR)]
+            [Range(1, int.MaxValue, ErrorMessage = ServicesConstants.Telemetry.SIM_POSITIVE_ERROR)]
+            public int SimId { get; set; }
         }
 
         public class StopStreamDTO
         {
-            [JsonPropertyName("file_name")]
-            public string FileName { get; set; } = string.Empty;
+            [JsonPropertyName("simId")]
+            [Required(ErrorMessage = ServicesConstants.Telemetry.SIM_MISSING_ERROR)]
+            [Range(1, int.MaxValue, ErrorMessage = ServicesConstants.Telemetry.SIM_POSITIVE_ERROR)]
+            public int SimId { get; set; }
         }
 
         public class StreamResponseDTO

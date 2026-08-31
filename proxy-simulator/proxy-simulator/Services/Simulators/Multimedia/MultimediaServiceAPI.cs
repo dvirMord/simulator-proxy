@@ -59,11 +59,11 @@ namespace proxy_simulator.Services
 
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogWarning(ServicesLogs.Multimedia.DELETE_FILE_FAILED, dto.FileName, response.StatusCode);
-                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_DELETE_FILE_FAILED, dto.FileName, response.StatusCode, serverResponse), null, response.StatusCode);
+                _logger.LogWarning(ServicesLogs.Multimedia.DELETE_FILE_FAILED, dto.SimId, response.StatusCode);
+                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_DELETE_FILE_FAILED, dto.SimId, response.StatusCode, serverResponse), null, response.StatusCode);
             }
 
-            _logger.LogInformation(ServicesLogs.Multimedia.DELETE_FILE_SUCCESS, dto.FileName);
+            _logger.LogInformation(ServicesLogs.Multimedia.DELETE_FILE_SUCCESS, dto.SimId);
             return true;
         }
 
@@ -74,11 +74,11 @@ namespace proxy_simulator.Services
 
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogWarning(ServicesLogs.Multimedia.START_STREAM_FAILED, dto.FileName, response.StatusCode, serverResponse);
-                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_START_STREAM_FAILED, dto.FileName, response.StatusCode, serverResponse), null, response.StatusCode);
+                _logger.LogWarning(ServicesLogs.Multimedia.START_STREAM_FAILED, dto.SimId,response.StatusCode, serverResponse);
+                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_START_STREAM_FAILED, response.StatusCode, serverResponse), null, response.StatusCode);
             }
 
-            _logger.LogInformation(ServicesLogs.Multimedia.START_STREAM_SUCCESS, dto.FileName, dto.SourceFileId);
+            _logger.LogInformation(ServicesLogs.Multimedia.START_STREAM_SUCCESS, dto.SimId);
             return true;
         }
 
@@ -89,11 +89,11 @@ namespace proxy_simulator.Services
 
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogWarning(ServicesLogs.Multimedia.STOP_STREAM_FAILED, dto.StreamName, response.StatusCode, serverResponse);
-                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_STOP_STREAM_FAILED, dto.StreamName, response.StatusCode, serverResponse), null, response.StatusCode);
+                _logger.LogWarning(ServicesLogs.Multimedia.STOP_STREAM_FAILED,dto.SimId, response.StatusCode, serverResponse);
+                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_STOP_STREAM_FAILED, response.StatusCode, serverResponse), null, response.StatusCode);
             }
 
-            _logger.LogInformation(ServicesLogs.Multimedia.STOP_STREAM_SUCCESS, dto.StreamName);
+            _logger.LogInformation(ServicesLogs.Multimedia.STOP_STREAM_SUCCESS, dto.SimId);
             return true;
         }
     }

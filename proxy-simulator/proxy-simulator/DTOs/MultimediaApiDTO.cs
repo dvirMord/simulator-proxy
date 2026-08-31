@@ -13,24 +13,19 @@ namespace proxy_simulator.DTOs
 
         public class DeleteFileDTO
         {
-            [JsonPropertyName("fileName")]
-            public string FileName { get; init; } = string.Empty;
+            [JsonPropertyName("simId")]
+            public int SimId { get; init; }
         }
         public class StartStreamDTO
         {
-            [JsonPropertyName("fileName")]
-            public string FileName { get; set; } = string.Empty;
-
-            [JsonPropertyName("sourceFileId")]
-            public int SourceFileId { get; set; }
-
-            [JsonPropertyName("type")]
-            public StreamType Type { get; set; } = StreamType.Video;
+            [JsonPropertyName("simId")]
+            public int SimId { get; set; }
         }
+
         public class StopStreamDTO
         {
-            [JsonPropertyName("streamName")]
-            public string StreamName { get; init; } = string.Empty;
+            [JsonPropertyName("simId")]
+            public int SimId { get; set; }
         }
     }
 }

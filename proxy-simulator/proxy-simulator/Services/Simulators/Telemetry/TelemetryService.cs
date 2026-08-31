@@ -75,21 +75,21 @@ namespace proxy_simulator.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    _logger.LogWarning(ServicesLogs.Telemetry.DELETE_KLV_FAILED, dto.FileName, response.StatusCode, error);
-                    throw new HttpRequestException(string.Format(ServicesLogs.Telemetry.EXC_DELETE_KLV_FAILED, dto.FileName, response.StatusCode, error), null, response.StatusCode);
+                    _logger.LogWarning(ServicesLogs.Telemetry.DELETE_KLV_FAILED, dto.SimId, response.StatusCode, error);
+                    throw new HttpRequestException(string.Format(ServicesLogs.Telemetry.EXC_DELETE_KLV_FAILED, dto.SimId, response.StatusCode, error), null, response.StatusCode);
                 }
 
-                _logger.LogInformation(ServicesLogs.Telemetry.DELETE_KLV_SUCCESS, dto.FileName);
+                _logger.LogInformation(ServicesLogs.Telemetry.DELETE_KLV_SUCCESS, dto.SimId);
                 return true;
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, ServicesLogs.Telemetry.DELETE_KLV_ERROR, dto.FileName);
+                _logger.LogError(ex, ServicesLogs.Telemetry.DELETE_KLV_ERROR, dto.SimId);
                 throw;
             }
             catch (TaskCanceledException ex)
             {
-                _logger.LogError(ex, ServicesLogs.Telemetry.DELETE_KLV_ERROR, dto.FileName);
+                _logger.LogError(ex, ServicesLogs.Telemetry.DELETE_KLV_ERROR, dto.SimId);
                 throw;
             }
         }
@@ -103,24 +103,24 @@ namespace proxy_simulator.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    _logger.LogWarning(ServicesLogs.Telemetry.START_STREAM_FAILED, dto.FileName, response.StatusCode, error);
-                    throw new HttpRequestException(string.Format(ServicesLogs.Telemetry.EXC_START_STREAM_FAILED, dto.FileName, response.StatusCode, error), null, response.StatusCode);
+                    _logger.LogWarning(ServicesLogs.Telemetry.START_STREAM_FAILED, dto.SimId, response.StatusCode, error);
+                    throw new HttpRequestException(string.Format(ServicesLogs.Telemetry.EXC_START_STREAM_FAILED, dto.SimId, response.StatusCode, error), null, response.StatusCode);
                 }
 
                 var result = await response.Content.ReadFromJsonAsync<StreamResponseDTO>(cancellationToken: cancellationToken)
-                    ?? throw new InvalidOperationException(string.Format(ServicesLogs.Telemetry.EXC_START_STREAM_INVALID_RESPONSE, dto.FileName));
+                    ?? throw new InvalidOperationException(string.Format(ServicesLogs.Telemetry.EXC_START_STREAM_INVALID_RESPONSE, dto.SimId));
 
-                _logger.LogInformation(ServicesLogs.Telemetry.START_STREAM_SUCCESS, dto.FileName, result.Message);
+                _logger.LogInformation(ServicesLogs.Telemetry.START_STREAM_SUCCESS, dto.SimId, result.Message);
                 return result;
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, ServicesLogs.Telemetry.START_STREAM_ERROR, dto.FileName);
+                _logger.LogError(ex, ServicesLogs.Telemetry.START_STREAM_ERROR, dto.SimId);
                 throw;
             }
             catch (TaskCanceledException ex)
             {
-                _logger.LogError(ex, ServicesLogs.Telemetry.START_STREAM_ERROR, dto.FileName);
+                _logger.LogError(ex, ServicesLogs.Telemetry.START_STREAM_ERROR, dto.SimId);
                 throw;
             }
         }
@@ -134,24 +134,24 @@ namespace proxy_simulator.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    _logger.LogWarning(ServicesLogs.Telemetry.STOP_STREAM_FAILED, dto.FileName, response.StatusCode, error);
-                    throw new HttpRequestException(string.Format(ServicesLogs.Telemetry.EXC_STOP_STREAM_FAILED, dto.FileName, response.StatusCode, error), null, response.StatusCode);
+                    _logger.LogWarning(ServicesLogs.Telemetry.STOP_STREAM_FAILED, dto.SimId, response.StatusCode, error);
+                    throw new HttpRequestException(string.Format(ServicesLogs.Telemetry.EXC_STOP_STREAM_FAILED, dto.SimId, response.StatusCode, error), null, response.StatusCode);
                 }
 
                 var result = await response.Content.ReadFromJsonAsync<StreamResponseDTO>(cancellationToken: cancellationToken)
-                    ?? throw new InvalidOperationException(string.Format(ServicesLogs.Telemetry.STOP_STREAM_FAILED, dto.FileName,response.StatusCode, error));
+                    ?? throw new InvalidOperationException(string.Format(ServicesLogs.Telemetry.EXC_STOP_STREAM_INVALID_RESPONSE, dto.SimId));
 
-                _logger.LogInformation(ServicesLogs.Telemetry.STOP_STREAM_SUCCESS, dto.FileName, result.Message);
+                _logger.LogInformation(ServicesLogs.Telemetry.STOP_STREAM_SUCCESS, dto.SimId, result.Message);
                 return result;
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, ServicesLogs.Telemetry.START_STREAM_ERROR, dto.FileName);
+                _logger.LogError(ex, ServicesLogs.Telemetry.STOP_STREAM_ERROR, dto.SimId);
                 throw;
             }
             catch (TaskCanceledException ex)
             {
-                _logger.LogError(ex, ServicesLogs.Telemetry.STOP_STREAM_ERROR, dto.FileName);
+                _logger.LogError(ex, ServicesLogs.Telemetry.STOP_STREAM_ERROR, dto.SimId);
                 throw;
             }
         }
