@@ -28,6 +28,14 @@ namespace proxy_simulator.DTOs
             public int SimId { get; set; }
         }
 
-        
+        public class ChannelDTO
+        {
+            public int Id { get; set; }
+            public int SourceFilesId { get; set; }
+            public string StreamEndpoint { get; set; } = string.Empty;
+            public string Type { get; set; } = string.Empty;
+            public int? FFmpegProcessId { get; set; }
+            public bool IsActive { get; set; }
+        }
     }
 }

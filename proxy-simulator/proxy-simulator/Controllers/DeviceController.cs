@@ -113,6 +113,13 @@ namespace proxy_simulator.Controllers
                 });
             }
         }
+
+        [HttpPost("Devices/ActiveStreams")]
+        public async Task<IActionResult> GetActiveStreamsAsync()
+        {
+            var activeStreams = await _deviceService.GetActiveStreamsAsync();
+            return Ok(new { success = true, Streams = activeStreams });
+        }
         //====================================END============================================================
     }
 }

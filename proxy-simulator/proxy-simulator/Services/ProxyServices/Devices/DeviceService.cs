@@ -230,5 +230,10 @@ namespace proxy_simulator.Services
 
             return true;
         }
+
+        public async Task<IEnumerable<MultimediaApiDTO.ChannelDTO>> GetActiveStreamsAsync(CancellationToken ct = default)
+        {
+            return await this._multimediaServiceAPI.GetActiveStreamsAsync(ct);
+        }
     }
 }

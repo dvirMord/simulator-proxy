@@ -14,6 +14,7 @@ namespace proxy_simulator.Services
             public const string FILES_API = "/api/v1/ms/files";
             public const string START_STREAM_API = "/api/v1/ms/stream/start";
             public const string STOP_STREAM_API = "/api/v1/ms/stream/stop";
+            public const string GET_ACTIVE_STREAMS_API = "/api/v1/ms/Active";
         }
 
         private readonly HttpClient _httpClient;
@@ -99,6 +100,16 @@ namespace proxy_simulator.Services
 
             _logger.LogInformation(ServicesLogs.Multimedia.STOP_STREAM_SUCCESS, dto.SimId);
             return true;
+        }
+
+        public async Task<IEnumerable<MultimediaApiDTO.ChannelDTO>> GetActiveStreamsAsync(CancellationToken ct = default)
+        {
+            var response = await this._httpClient.GetFromJsonAsync<SimulatorsRos.Multimedia.GetAllActiveStreamResponse>(ServiceApi.GET_ACTIVE_STREAMS_API, cancellationToken: ct);
+            if (response is null)
+            {
+                return Enumerable.Empty<MultimediaApiDTO.ChannelDTO>();
+            }
+            return response.Streams;
         }
     }
 }

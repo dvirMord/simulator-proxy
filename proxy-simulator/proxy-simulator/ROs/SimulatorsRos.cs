@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-
+using static proxy_simulator.DTOs.MultimediaApiDTO;
 namespace proxy_simulator.ROs
 {
     public static class SimulatorsRos
@@ -28,6 +28,15 @@ namespace proxy_simulator.ROs
 
                 [JsonPropertyName("rtspStream")]
                 public string RtspStream { get; set; } = string.Empty;
+            }
+
+            public class GetAllActiveStreamResponse
+            {
+                [JsonPropertyName("success")]
+                public bool Success { get; set; }
+
+                [JsonPropertyName("streams")]
+                public IEnumerable<ChannelDTO> Streams { get; set; } = new List<ChannelDTO>();
             }
         }
 

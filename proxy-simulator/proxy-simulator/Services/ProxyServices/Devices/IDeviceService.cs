@@ -14,5 +14,6 @@ namespace proxy_simulator.Interfaces
         Task<List<RtspStreamToSimId>> StartAllDevicesChannelsAsync();
         Task<bool> StopAllDevicesChannelsAsync();
         Task<IEnumerable<string>> GetAllDevicesAsync();
+        Task<IEnumerable<MultimediaApiDTO.ChannelDTO>> GetActiveStreamsAsync(CancellationToken ct = default);
     }
 }
