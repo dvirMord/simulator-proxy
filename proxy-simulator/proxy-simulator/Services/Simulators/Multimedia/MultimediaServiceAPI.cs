@@ -74,7 +74,6 @@ namespace proxy_simulator.Services
             var serverResponse = await response.Content.ReadAsStringAsync(ct);
             if (!response.IsSuccessStatusCode)
             {
-                
                 _logger.LogWarning(ServicesLogs.Multimedia.START_STREAM_FAILED, dto.SimId,response.StatusCode, serverResponse);
                 throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_START_STREAM_FAILED, dto.SimId,response.StatusCode, serverResponse), null, response.StatusCode);
             }
