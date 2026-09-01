@@ -14,6 +14,7 @@ namespace proxy_simulator.Services
             public const string FILES_API = "/api/v1/ms/files";
             public const string START_STREAM_API = "/api/v1/ms/stream/start";
             public const string STOP_STREAM_API = "/api/v1/ms/stream/stop";
+            public const string GET_ACTIVE_STREAMS_API = "/api/v1/ms/Active";
         }
 
         private readonly HttpClient _httpClient;
@@ -67,19 +68,22 @@ namespace proxy_simulator.Services
             return true;
         }
 
-        public async Task<bool> StartStreamAsync(MultimediaApiDTO.StartStreamDTO dto, CancellationToken ct = default)
+        public async Task<string> StartStreamAsync(MultimediaApiDTO.StartStreamDTO dto, CancellationToken ct = default)
         {
             var response = await _httpClient.PostAsJsonAsync(ServiceApi.START_STREAM_API, dto, ct);
             var serverResponse = await response.Content.ReadAsStringAsync(ct);
-
             if (!response.IsSuccessStatusCode)
             {
                 _logger.LogWarning(ServicesLogs.Multimedia.START_STREAM_FAILED, dto.SimId,response.StatusCode, serverResponse);
-                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_START_STREAM_FAILED, response.StatusCode, serverResponse), null, response.StatusCode);
+                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_START_STREAM_FAILED, dto.SimId,response.StatusCode, serverResponse), null, response.StatusCode);
             }
+            var serverRo = JsonSerializer.Deserialize<SimulatorsRos.Multimedia.StartStreamResponse>(serverResponse);
+
+            if (serverRo is null)
+                throw new InvalidOperationException(string.Format(ServicesLogs.Multimedia.EXC_START_STREAM_ERROR, dto.SimId));
 
             _logger.LogInformation(ServicesLogs.Multimedia.START_STREAM_SUCCESS, dto.SimId);
-            return true;
+            return serverRo.RtspStream;
         }
 
         public async Task<bool> StopStreamAsync(MultimediaApiDTO.StopStreamDTO dto, CancellationToken ct = default)
@@ -95,6 +99,16 @@ namespace proxy_simulator.Services
 
             _logger.LogInformation(ServicesLogs.Multimedia.STOP_STREAM_SUCCESS, dto.SimId);
             return true;
+        }
+
+        public async Task<IEnumerable<MultimediaApiDTO.ChannelDTO>> GetActiveStreamsAsync(CancellationToken ct = default)
+        {
+            var response = await this._httpClient.GetFromJsonAsync<SimulatorsRos.Multimedia.GetAllActiveStreamResponse>(ServiceApi.GET_ACTIVE_STREAMS_API, cancellationToken: ct);
+            if (response is null)
+            {
+                return Enumerable.Empty<MultimediaApiDTO.ChannelDTO>();
+            }
+            return response.Streams;
         }
     }
 }

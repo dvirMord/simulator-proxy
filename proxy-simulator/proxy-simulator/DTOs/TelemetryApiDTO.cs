@@ -13,7 +13,6 @@ namespace proxy_simulator.DTOs
             [Range(1, int.MaxValue, ErrorMessage = ServicesConstants.Telemetry.SIM_POSITIVE_ERROR)]
             public int SimId { get; set; }
         }
-
         public class StartStreamDTO
         {
             [JsonPropertyName("simId")]
@@ -21,7 +20,6 @@ namespace proxy_simulator.DTOs
             [Range(1, int.MaxValue, ErrorMessage = ServicesConstants.Telemetry.SIM_POSITIVE_ERROR)]
             public int SimId { get; set; }
         }
-
         public class StopStreamDTO
         {
             [JsonPropertyName("simId")]
@@ -29,7 +27,6 @@ namespace proxy_simulator.DTOs
             [Range(1, int.MaxValue, ErrorMessage = ServicesConstants.Telemetry.SIM_POSITIVE_ERROR)]
             public int SimId { get; set; }
         }
-
         public class StreamResponseDTO
         {
             [JsonPropertyName("success")]

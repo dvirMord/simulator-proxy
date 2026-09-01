@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using proxy_simulator.Constants;
 using proxy_simulator.DTOs;
 using proxy_simulator.Interfaces;
+using static proxy_simulator.DTOs.DevicesDTOs;
 
 namespace proxy_simulator.Controllers
 {
@@ -53,8 +54,8 @@ namespace proxy_simulator.Controllers
         {
             _logger.LogInformation(ControllersLogs.Device.START_DEVICE_CHANNELS_ACTIVATED, requestDto.deviceName);
 
-            var result = await _deviceService.StartDeviceChanneles(requestDto);
-            return Ok(new { success = result });
+            var streams = await _deviceService.StartDeviceChanneles(requestDto);
+            return Ok(new { success = true , Streams = streams });
         }
 
         [HttpPost("Devices/Stop")]
@@ -72,11 +73,12 @@ namespace proxy_simulator.Controllers
             _logger.LogInformation(ControllersLogs.Device.START_ALL_DEVICES_CHANNELS_ACTIVATED);
             try
             {
-                bool result = await _deviceService.StartAllDevicesChannelsAsync();
+                List<RtspStreamToSimId> result = await _deviceService.StartAllDevicesChannelsAsync();
                 return Ok(new
                 {
-                    success = result,
-                    message = ServicesLogs.Device.MSG_START_ALL_DEVICES_SUCCESS
+                    success = true,
+                    message = ServicesLogs.Device.MSG_START_ALL_DEVICES_SUCCESS,
+                    Streams = result
                 });
             }
             catch (Exception ex)
@@ -110,6 +112,13 @@ namespace proxy_simulator.Controllers
                     message = ex.Message
                 });
             }
+        }
+
+        [HttpPost("Devices/ActiveStreams")]
+        public async Task<IActionResult> GetActiveStreamsAsync()
+        {
+            var activeStreams = await _deviceService.GetActiveStreamsAsync();
+            return Ok(new { success = true, Streams = activeStreams });
         }
         //====================================END============================================================
     }
