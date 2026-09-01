@@ -15,8 +15,10 @@
 
         public static class ServicesIp
         {
-            public const string MULTEMEDIA = "http://localhost:5002/";
-            public const string TELEMETRY = "http://localhost:8000/";
+            // becasu the containers are in the same docker network, we can use the service name as the hostname
+            // we cant use localhost because the containers are isolated from each other, so we need to use the service name as the hostname
+            public const string MULTEMEDIA = "http://multimedia-simulator:5000/";
+            public const string TELEMETRY = "http://telemetry-simulator:8000/";
         }
     }
 }
