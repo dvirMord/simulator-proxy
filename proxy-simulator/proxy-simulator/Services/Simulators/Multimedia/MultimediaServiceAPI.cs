@@ -74,8 +74,9 @@ namespace proxy_simulator.Services
             var serverResponse = await response.Content.ReadAsStringAsync(ct);
             if (!response.IsSuccessStatusCode)
             {
+                string errorMessage = ExtractServerMessage(serverResponse);
                 _logger.LogWarning(ServicesLogs.Multimedia.START_STREAM_FAILED, dto.SimId,response.StatusCode, serverResponse);
-                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_START_STREAM_FAILED, dto.SimId,response.StatusCode, serverResponse), null, response.StatusCode);
+                throw new HttpRequestException(errorMessage, null, response.StatusCode);
             }
             var serverRo = JsonSerializer.Deserialize<SimulatorsRos.Multimedia.StartStreamResponse>(serverResponse);
 
@@ -93,8 +94,9 @@ namespace proxy_simulator.Services
 
             if (!response.IsSuccessStatusCode)
             {
+                string errorMessage = ExtractServerMessage(serverResponse);
                 _logger.LogWarning(ServicesLogs.Multimedia.STOP_STREAM_FAILED,dto.SimId, response.StatusCode, serverResponse);
-                throw new HttpRequestException(string.Format(ServicesLogs.Multimedia.EXC_STOP_STREAM_FAILED, response.StatusCode, serverResponse), null, response.StatusCode);
+                throw new HttpRequestException(errorMessage, null, response.StatusCode);
             }
 
             _logger.LogInformation(ServicesLogs.Multimedia.STOP_STREAM_SUCCESS, dto.SimId);
@@ -109,6 +111,28 @@ namespace proxy_simulator.Services
                 return Enumerable.Empty<MultimediaApiDTO.ChannelDTO>();
             }
             return response.Streams;
+        }
+
+        private static string ExtractServerMessage(string rawJson)
+        {
+            if (string.IsNullOrWhiteSpace(rawJson))
+                return ServicesLogs.Multimedia.UNKNOWN_ERROR;
+
+            try
+            {
+                using var doc = JsonDocument.Parse(rawJson);
+                if (doc.RootElement.TryGetProperty(ServicesLogs.Multimedia.MESSAGE_FIELD, out var messageElement) ||
+                    doc.RootElement.TryGetProperty(ServicesLogs.Multimedia.MESSAGE_FIELD_CAPITALIZED, out messageElement))
+                {
+                    return messageElement.GetString() ?? rawJson;
+                }
+            }
+            catch (JsonException)
+            {
+                return rawJson;
+            }
+
+            return rawJson;
         }
     }
 }

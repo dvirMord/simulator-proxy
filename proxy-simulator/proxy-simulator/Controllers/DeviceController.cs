@@ -114,7 +114,7 @@ namespace proxy_simulator.Controllers
             }
         }
 
-        [HttpPost("Devices/ActiveStreams")]
+        [HttpGet("Devices/ActiveStreams")]
         public async Task<IActionResult> GetActiveStreamsAsync()
         {
             var activeStreams = await _deviceService.GetActiveStreamsAsync();

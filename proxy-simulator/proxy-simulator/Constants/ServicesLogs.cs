@@ -69,7 +69,12 @@ namespace proxy_simulator.Constants
             // Stop Stream
             public const string EXC_STOP_STREAM_FAILED =
                 "Failed to stop stream (SimId: {0}). StatusCode: {1}. ServerResponse: {2}";
-
+            public const string UNKNOWN_ERROR =
+                "Unknown error occurred";
+            public const string MESSAGE_FIELD =
+                "message";
+            public const string MESSAGE_FIELD_CAPITALIZED =
+                "Message";
             public const string EXC_STOP_STREAM_ERROR =
                 "An error occurred while stopping stream (SimId: {0}).";
 

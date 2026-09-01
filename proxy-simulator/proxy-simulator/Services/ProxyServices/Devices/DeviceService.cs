@@ -35,19 +35,18 @@ namespace proxy_simulator.Services
             await using var multimediaStream = requestDto.MultimediaFile.OpenReadStream();
             await using var telemetryStream = requestDto.TelemetryFile.OpenReadStream();
 
-            await this._dBService.InsertDeviceAsync(requestDto.DeviceName);
-
             int multimediaSourceFileId = await _multimediaServiceAPI.UploadFileAsync(
                 multimediaStream,
                 requestDto.MultimediaFile.FileName
             );
 
-            await this._dBService.InsertChannelAsync(ChannelType.Multimedia, multimediaSourceFileId, requestDto.DeviceName);
-
             int telemetrySourceFileId = await _telemetryServiceAPI.UploadKlvFileAsync(
                 telemetryStream,
                 requestDto.TelemetryFile.FileName
             );
+
+            await this._dBService.InsertDeviceAsync(requestDto.DeviceName);
+            await this._dBService.InsertChannelAsync(ChannelType.Multimedia, multimediaSourceFileId, requestDto.DeviceName);
             await this._dBService.InsertChannelAsync(ChannelType.Telemetry, telemetrySourceFileId, requestDto.DeviceName);
 
             return true;
